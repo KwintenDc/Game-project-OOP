@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Game_project_OOP
 {
-    internal class Defense : Building
+    internal class AI
     {
-        int DEFENSE_PER_BUILDING = 10;
+        Random rand = new Random();
+        public void AIAttack(City city, int strength)
+        {
+            
+        }
     }
 }

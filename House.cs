@@ -8,6 +8,13 @@ namespace Game_project_OOP
 {
     class House : Building
     {
-        int HOUSING_SPACE = 20;
-    }
+		private int housingSpace = 10;
+
+		public int HousingSpace
+		{
+			get { return housingSpace; }
+			set { housingSpace = value; }
+		}
+
+	}
 }

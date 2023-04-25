@@ -23,10 +23,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
-            <RowDefinition Height="220"></RowDefinition>
+            <RowDefinition Height="320"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
-            <RowDefinition Height="125"></RowDefinition>
-            <RowDefinition Height="125"></RowDefinition>
+            <RowDefinition Height="75"></RowDefinition>
+            <RowDefinition Height="75"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions>
         <Label x:Name="lblTitle" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="28" Grid.ColumnSpan="10">Empire Expansion</Label>
@@ -110,45 +110,45 @@
             </Grid.RowDefinitions>
             <Label x:Name="lblVillageStatistics" Grid.ColumnSpan="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Black">Vilage Statistics</Label>
 
-            <Label x:Name="lblCitizens" Grid.Row="1" VerticalContentAlignment="Center">Total Citizens:</Label>
+            <Label x:Name="lblCitizens" Grid.Row="1" VerticalContentAlignment="Center" ToolTip="{Binding TltpCitizens}">Total Citizens:</Label>
             <ProgressBar x:Name="prgBrCitizens" Grid.Column="1" Grid.Row="1" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
-            <Label x:Name="lblValueCitizens" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrCitizens, Path=Value, Mode=OneWay}"></Label>
+            <Label x:Name="lblValueCitizens" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding TltpCitizens}" Content="{Binding ElementName=prgBrCitizens, Path=Value, Mode=OneWay}"></Label>
 
-            <Label x:Name="lblHappiness" Grid.Row="2" VerticalContentAlignment="Center">Happiness:</Label>
+            <Label x:Name="lblHappiness" Grid.Row="2" VerticalContentAlignment="Center" ToolTip="{Binding TltpHappiness}">Happiness:</Label>
             <ProgressBar x:Name="prgBrHappiness" Grid.Column="1" Grid.Row="2" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
-            <Label x:Name="lblValueHappiness" Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrHappiness, Path=Value, Mode=OneWay}"></Label>
+            <Label x:Name="lblValueHappiness" Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding TltpHappiness}" Content="{Binding ElementName=prgBrHappiness, Path=Value, Mode=OneWay}"></Label>
 
-            <Label x:Name="lblHealth" Grid.Row="3" VerticalContentAlignment="Center">Health:</Label>
+            <Label x:Name="lblHealth" Grid.Row="3" VerticalContentAlignment="Center" ToolTip="{Binding TltpHealth}">Health:</Label>
             <ProgressBar x:Name="prgBrHealth" Grid.Column="1" Grid.Row="3" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
-            <Label x:Name="lblValueHealth" Grid.Column="1" Grid.Row="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrHealth, Path=Value, Mode=OneWay}"></Label>
+            <Label x:Name="lblValueHealth" Grid.Column="1" Grid.Row="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding TltpHealth}" Content="{Binding ElementName=prgBrHealth, Path=Value, Mode=OneWay}"></Label>
 
-            <Label x:Name="lblDefense" Grid.Row="4" VerticalContentAlignment="Center">Defense:</Label>
+            <Label x:Name="lblDefense" Grid.Row="4" VerticalContentAlignment="Center" ToolTip="{Binding TltpDefense}">Defense:</Label>
             <ProgressBar x:Name="prgBrDefense" Grid.Column="1" Grid.Row="4" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
-            <Label x:Name="lblValueDefense" Grid.Column="1" Grid.Row="4" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrDefense, Path=Value, Mode=OneWay}"></Label>
+            <Label x:Name="lblValueDefense" Grid.Column="1" Grid.Row="4" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding TltpDefense}" Content="{Binding ElementName=prgBrDefense, Path=Value, Mode=OneWay}"></Label>
 
             <Label x:Name="lblRecources" Grid.Row="5"  Grid.ColumnSpan="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Black">Recourses</Label>
 
-            <Label x:Name="lblMaterials" Grid.Row="6" VerticalContentAlignment="Center">Materials:</Label>
+            <Label x:Name="lblMaterials" Grid.Row="6" VerticalContentAlignment="Center" ToolTip="{Binding TltpMaterials}">Materials:</Label>
             <ProgressBar x:Name="prgBrMaterials" Grid.Column="1" Grid.Row="6" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
-            <Label x:Name="lblValueMaterials" Grid.Column="1" Grid.Row="6" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrMaterials, Path=Value, Mode=OneWay}"></Label>
+            <Label x:Name="lblValueMaterials" Grid.Column="1" Grid.Row="6" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding TltpMaterials}" Content="{Binding ElementName=prgBrMaterials, Path=Value, Mode=OneWay}"></Label>
 
-            <Label x:Name="lblWheat" Grid.Row="7" VerticalContentAlignment="Center">Wheat:</Label>
+            <Label x:Name="lblWheat" Grid.Row="7" VerticalContentAlignment="Center" ToolTip="{Binding TltpWheat}" >Wheat:</Label>
             <ProgressBar x:Name="prgBrWheat" Grid.Column="1" Grid.Row="7" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
-            <Label x:Name="lblValueWheat" Grid.Column="1" Grid.Row="7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrWheat, Path=Value, Mode=OneWay}"></Label>
+            <Label x:Name="lblValueWheat" Grid.Column="1" Grid.Row="7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding TltpWheat}" Content="{Binding ElementName=prgBrWheat, Path=Value, Mode=OneWay}"></Label>
 
-            <Label x:Name="lblBread" Grid.Row="8" VerticalContentAlignment="Center">Bread:</Label>
+            <Label x:Name="lblBread" Grid.Row="8" VerticalContentAlignment="Center" ToolTip="{Binding TltpBread}" >Bread:</Label>
             <ProgressBar x:Name="prgBrBread" Grid.Column="1" Grid.Row="8" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
-            <Label x:Name="lblValueBread" Grid.Column="1" Grid.Row="8" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrBread, Path=Value, Mode=OneWay}"></Label>
+            <Label x:Name="lblValueBread" Grid.Column="1" Grid.Row="8" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding TltpBread}" Content="{Binding ElementName=prgBrBread, Path=Value, Mode=OneWay}"></Label>
 
             <Label x:Name="lblProductionPerPhase" Grid.ColumnSpan="2" Grid.Row="9" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Black">Production Per Phase</Label>
 
             <Label x:Name="lblMaterialsPerHour" Grid.Row="10" VerticalContentAlignment="Center">Materials:</Label>
-            <ProgressBar x:Name="prgBrMaterialsPerHour" Grid.Column="1" Grid.Row="10" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
-            <Label x:Name="lblValueMaterialsPerHour" Grid.Column="1" Grid.Row="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrMaterialsPerHour, Path=Value, Mode=OneWay}"></Label>
+            <ProgressBar x:Name="prgBrMaterialsPerHour" Grid.Column="1" Grid.Row="10" Background="White" BorderBrush="Black" Value="100" Margin="5" Width="230" Height="20"/>
+            <Label x:Name="lblValueMaterialsPerHour" Grid.Column="1" Grid.Row="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"></Label>
 
             <Label x:Name="lblWheatPerHour" Grid.Row="11" VerticalContentAlignment="Center">Wheat:</Label>
-            <ProgressBar x:Name="prgBrWheatPerHour" Grid.Column="1" Grid.Row="11" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
-            <Label x:Name="lblValueWheatPerHour" Grid.Column="1" Grid.Row="11" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrWheatPerHour, Path=Value, Mode=OneWay}"></Label>
+            <ProgressBar x:Name="prgBrWheatPerHour" Grid.Column="1" Grid.Row="11" Background="White" BorderBrush="Black" Value="100" Margin="5" Width="230" Height="20"/>
+            <Label x:Name="lblValueWheatPerHour" Grid.Column="1" Grid.Row="11" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"></Label>
 
             <Label x:Name="lblRound" Grid.Column="2" Grid.Row="13" HorizontalContentAlignment="Right" Margin="5">Round : 0/0</Label>
         </Grid>

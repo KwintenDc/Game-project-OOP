@@ -8,9 +8,7 @@ namespace Game_project_OOP
 {
     class Mine : Building
     {
-        int WORKING_SPACE = 5;
-
-        private int productionPerRound = 20;
+        private int productionPerRound = 10;
 
 		public int ProductionsPerRound
 		{

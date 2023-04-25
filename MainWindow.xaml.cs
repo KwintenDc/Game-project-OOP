@@ -26,20 +26,33 @@ namespace Game_project_OOP
         int clickedCanvasNumber;
         GamePhase currentPhase;
         bool isFirstRound = true;
+        AI ai = new AI();
         Game game = new Game();
         City city = new City();
         Mine mine = new Mine();
         Field field = new Field();
         House house = new House();
-        double maxWheat, maxBread, maxMaterials, maxCitizens, MAX_HEALTH, MAX_DEFENSE, MAX_HAPPINESS;
+        double maxWheat, maxBread, maxMaterials, MAX_CITIZENS_START, MAX_HEALTH, MAX_DEFENSE, MAX_HAPPINESS;
         Resource? bread, wheat, materials;
         string gameOutput, userInput, userChoice;
         int WHEAT_TO_BREAD_RATIO = 3;
         Random random = new Random();
         int randNum;
+
+        public string TltpCitizens { get; set; }
+        public string TltpHappiness { get; set; }
+        public string TltpHealth { get; set; }
+        public string TltpDefense { get; set; }
+        public string TltpMaterials { get; set; }
+        public string TltpWheat { get; set; }
+        public string TltpBread { get; set; }
         public MainWindow()
         {
             InitializeComponent();
+
+            TltpCitizens = "This is a tooltip test.";
+            // Set the DataContext of the window to this instance
+            DataContext = this;
 
             // Link all click events to 1 method.
             canvas1.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
@@ -73,6 +86,7 @@ namespace Game_project_OOP
             canvas25.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
 
             btnSubmit.Click += BtnSubmit_Click;
+            txbxUserInput.KeyDown += txBxUserInput_KeyDown;
 
             Init_Game();
         }
@@ -82,6 +96,15 @@ namespace Game_project_OOP
             userInput = txbxUserInput.Text;
             txbxUserInput.Text = "";
             GameMain();
+        }
+        private void txBxUserInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                // trigger the click event of the button
+                // Trigger the click event of the button
+                BtnSubmit_Click(sender, e);
+            }
         }
 
         private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -104,11 +127,11 @@ namespace Game_project_OOP
             MAX_HAPPINESS = 100;
             MAX_HEALTH = 100;
             MAX_DEFENSE = 100;
+            MAX_CITIZENS_START = 100;
 
-            maxMaterials = 500;
-            maxWheat = 500;
-            maxBread = 500;
-            maxCitizens = 100;
+            maxMaterials = 200;
+            maxWheat = 200;
+            maxBread = 200;
 
             city.MaxFields = 4;
             city.MaxMines = 4;
@@ -140,7 +163,7 @@ namespace Game_project_OOP
                                  "0", "0", "0", "0", "0"};
             city.CityLayout = layout;
 
-            // Drawing city layout
+            // Drawing city layout.
             DrawGameBoard();
 
             // Set GamePart to 1.
@@ -301,8 +324,7 @@ namespace Game_project_OOP
                 {
                     game.Round = 1;
                     currentPhase = GamePhase.Crafting;
-                    city.AddResource("Materials", mine.ProductionsPerRound * city.TotalMines);
-                    city.AddResource("Wheat", field.ProductionsPerRound * city.TotalFields);
+                    AddRecoursesAfterRound();
                 }
             }
         }
@@ -312,7 +334,6 @@ namespace Game_project_OOP
             if (currentPhase == GamePhase.Crafting)
             {
                 game.TotalRounds = 1;
-                gameOutput = "";
                 gameOutput = "<<< CRAFTING PHASE >>>\n\r";
                 gameOutput += "Do you want to craft bread from wheat? (3 -> 1)\n\r";
                 gameOutput += "1. Yes, 2. No\n\r";
@@ -327,9 +348,8 @@ namespace Game_project_OOP
                             gameOutput = "<<< CRAFTING PHASE >>>\n\r";
                             gameOutput += "Okey, the wheat will be saved for later.\n\r";
                             currentPhase = GamePhase.Defending;
-                            city.AddResource("Materials", mine.ProductionsPerRound * city.TotalMines);
-                            city.AddResource("Wheat", field.ProductionsPerRound * city.TotalFields);
                             userInput = null;
+                            AddRecoursesAfterRound();
                             return;
                         default:
                             gameOutput += "Pick a valid option (1 , 2)";
@@ -348,9 +368,8 @@ namespace Game_project_OOP
                                 city.AddResource("Bread", Convert.ToInt32(userInput));
                                 city.RemoveResource("Wheat", Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO);
                                 userInput = null;
-                                city.AddResource("Materials", mine.ProductionsPerRound * city.TotalMines);
-                                city.AddResource("Wheat", field.ProductionsPerRound * city.TotalFields);
                                 userChoice = "0";
+                                AddRecoursesAfterRound();
                                 currentPhase = GamePhase.Defending;
                                 return;
                             }
@@ -366,8 +385,7 @@ namespace Game_project_OOP
                                 city.RemoveResource("Wheat", Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO);
                                 userInput = null;
                                 userChoice = "0";
-                                city.AddResource("Materials", mine.ProductionsPerRound * city.TotalMines);
-                                city.AddResource("Wheat", field.ProductionsPerRound * city.TotalFields);
+                                AddRecoursesAfterRound();
                                 currentPhase = GamePhase.Defending;
                                 return;
                             }
@@ -394,16 +412,19 @@ namespace Game_project_OOP
                 {
                     gameOutput += "A village is attacking you! It's a pretty small village so they don't do much damage.\n\r" +
                         "The mayor retreats his troops as you are still much to strong for his village.\n\r";
+                    ai.AIAttack(city);
                 }
                 if (6 < randNum && randNum <= 9)
                 {
                     gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
-                        "The mayor retreats his troops after a great battle.\n\r";
+                        "The mayor calls his troops back a minor loss for your village..\n\r";
+                    ai.AIAttack(city);
                 }
                 if (10 <= randNum)
                 {
                     gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
-                            "The mayor retreats his troops after a great battle.\n\r";
+                            "The mayor calls his troops back a great loss for your village.\n\r";
+                    ai.AIAttack(city);
                 }
             }
         }
@@ -424,8 +445,15 @@ namespace Game_project_OOP
             }
         }
 
+        private void AddRecoursesAfterRound() 
+        {
+            city.AddResource("Materials", mine.ProductionsPerRound * city.TotalMines);
+            city.AddResource("Wheat", field.ProductionsPerRound * city.TotalFields);
+        }
+
         private void UpdateUI()
         {
+            // Update the progressbar values.
             prgBrCitizens.Value = city.Citizens;
             prgBrHappiness.Value = city.Happiness;
             prgBrHealth.Value = city.Health;
@@ -435,18 +463,29 @@ namespace Game_project_OOP
             prgBrWheat.Value = wheat.Amount;
             prgBrBread.Value = bread.Amount;
 
-            prgBrMaterialsPerHour.Value = mine.ProductionsPerRound * city.TotalMines;
-            prgBrWheatPerHour.Value = field.ProductionsPerRound * city.TotalFields;
+            lblValueMaterialsPerHour.Content = $"{mine.ProductionsPerRound * city.TotalMines}";
+            lblValueWheatPerHour.Content = $"{field.ProductionsPerRound * city.TotalFields}";
 
+            // Update/Set the progressbar maximum values.
             prgBrHappiness.Maximum = MAX_HAPPINESS;
             prgBrHealth.Maximum = MAX_HEALTH;
             prgBrDefense.Maximum = MAX_DEFENSE;
             prgBrMaterials.Maximum = maxMaterials;
             prgBrWheat.Maximum = maxWheat;
             prgBrBread.Maximum = maxBread;
-            prgBrCitizens.Maximum = maxCitizens;
+            prgBrCitizens.Maximum = MAX_CITIZENS_START + (house.HousingSpace * city.TotalHouses);
 
+            // Update the label to display the current round.
             lblRound.Content = $"Round : {game.Round}/{game.TotalRounds}";
+
+            // Update the tooltips to display the maximum values.
+            TltpCitizens = $"Max : {MAX_CITIZENS_START + (house.HousingSpace * city.TotalHouses)}";
+            TltpHappiness = $"Max : {MAX_HAPPINESS}";
+            TltpHealth = $"Max : {MAX_HEALTH}";
+            TltpDefense = $"Max : {MAX_DEFENSE}";
+            TltpMaterials = $"Max : {maxMaterials}";
+            TltpWheat = $"Max : {maxWheat}";
+            TltpBread = $"Max : {maxBread}";
         }
 
         private void UpdateGameText(string text)
@@ -486,6 +525,8 @@ namespace Game_project_OOP
                         break;
                 }
             }
+
+            // Dictionary to count total buildings of it's type.
             Dictionary<string, int> countDict = new Dictionary<string, int>();
             foreach (string item in city.CityLayout)
             {
@@ -506,8 +547,6 @@ namespace Game_project_OOP
                 city.TotalHouses = countDict["H"];
             if (countDict.ContainsKey("D"))
                 city.TotalDefenses = countDict["D"];
-            
-
         }
     }
 }
