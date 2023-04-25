@@ -1,0 +1,162 @@
+﻿<Window x:Class="Game_project_OOP.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Game_project_OOP"
+        mc:Ignorable="d"
+        Title="Empire Expansion" SizeToContent="WidthAndHeight"
+        FontFamily="Verdana" FontSize="18">
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60"></ColumnDefinition>
+            <ColumnDefinition Width="170"></ColumnDefinition>
+            <ColumnDefinition Width="170"></ColumnDefinition>
+            <ColumnDefinition Width="83"></ColumnDefinition>
+            <ColumnDefinition Width="83"></ColumnDefinition>
+            <ColumnDefinition Width="83"></ColumnDefinition>
+            <ColumnDefinition Width="83"></ColumnDefinition>
+            <ColumnDefinition Width="83"></ColumnDefinition>
+            <ColumnDefinition Width="83"></ColumnDefinition>
+            <ColumnDefinition Width="400"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="220"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="125"></RowDefinition>
+            <RowDefinition Height="125"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Label x:Name="lblTitle" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="28" Grid.ColumnSpan="10">Empire Expansion</Label>
+
+        <Label x:Name="lblGameInput" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Black" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">Game text</Label>
+        <TextBox x:Name="txbxGameInput" Grid.Row="2" Margin="0,5,5,5" Padding="5" IsEnabled="False" FontFamily="Consolas"  Grid.ColumnSpan="3" TextWrapping="Wrap"></TextBox>
+
+        <Label x:Name="lblUserInput" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Black" Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="3">User input</Label>
+        <TextBox x:Name="txbxUserInput" Grid.Row="4" Grid.RowSpan="2" Margin="0,5,5,5" Padding="5" FontFamily="Consolas"  Grid.ColumnSpan="3" TextWrapping="Wrap"></TextBox>
+
+        <Button x:Name="btnSubmit" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Right" Margin="5,2" Padding="5">Submit answer</Button>
+        <Button x:Name="btnSaveandExit" Grid.Row="6" Grid.Column="2" HorizontalAlignment="Right" Margin="5,2" Padding="5">Save and quit</Button>
+
+        <Label x:Name="lblVillageLayout" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="6" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Black">Village Layout</Label>
+        <Grid Grid.Column="3" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Canvas x:Name="canvas1" Width="90" Height="90" Background="White" Grid.Column="0" Grid.Row="0"></Canvas>
+            <Canvas x:Name="canvas2" Width="90" Height="90" Background="White" Grid.Column="1" Grid.Row="0"></Canvas>
+            <Canvas x:Name="canvas3" Width="90" Height="90" Background="White" Grid.Column="2" Grid.Row="0"></Canvas>
+            <Canvas x:Name="canvas4" Width="90" Height="90" Background="White" Grid.Column="3" Grid.Row="0"></Canvas>
+            <Canvas x:Name="canvas5" Width="90" Height="90" Background="White" Grid.Column="4" Grid.Row="0"></Canvas>
+
+            <Canvas x:Name="canvas6" Width="90" Height="90" Background="White" Grid.Column="0" Grid.Row="1"></Canvas>
+            <Canvas x:Name="canvas7" Width="90" Height="90" Background="DarkOliveGreen" Grid.Column="1" Grid.Row="1"></Canvas>
+            <Canvas x:Name="canvas8" Width="90" Height="90" Background="RosyBrown" Grid.Column="2" Grid.Row="1"></Canvas>
+            <Canvas x:Name="canvas9" Width="90" Height="90" Background="DimGray" Grid.Column="3" Grid.Row="1"></Canvas>
+            <Canvas x:Name="canvas10" Width="90" Height="90" Background="White" Grid.Column="4" Grid.Row="1"></Canvas>
+
+            <Canvas x:Name="canvas11" Width="90" Height="90" Background="White" Grid.Column="0" Grid.Row="2"></Canvas>
+            <Canvas x:Name="canvas12" Width="90" Height="90" Background="RosyBrown" Grid.Column="1" Grid.Row="2"></Canvas>
+            <Canvas x:Name="canvas13" Width="90" Height="90" Background="Goldenrod" Grid.Column="2" Grid.Row="2"></Canvas>
+            <Canvas x:Name="canvas14" Width="90" Height="90" Background="RosyBrown" Grid.Column="3" Grid.Row="2"></Canvas>
+            <Canvas x:Name="canvas15" Width="90" Height="90" Background="White" Grid.Column="4" Grid.Row="2"></Canvas>
+
+            <Canvas x:Name="canvas16" Width="90" Height="90" Background="White" Grid.Column="0" Grid.Row="3"></Canvas>
+            <Canvas x:Name="canvas17" Width="90" Height="90" Background="DimGray" Grid.Column="1" Grid.Row="3"></Canvas>
+            <Canvas x:Name="canvas18" Width="90" Height="90" Background="RosyBrown" Grid.Column="2" Grid.Row="3" Margin="5,0,5,4" VerticalAlignment="Bottom"></Canvas>
+            <Canvas x:Name="canvas19" Width="90" Height="90" Background="DarkOliveGreen" Grid.Column="3" Grid.Row="3"></Canvas>
+            <Canvas x:Name="canvas20" Width="90" Height="90" Background="White" Grid.Column="4" Grid.Row="3"></Canvas>
+
+            <Canvas x:Name="canvas21" Width="90" Height="90" Background="White" Grid.Column="0" Grid.Row="4"></Canvas>
+            <Canvas x:Name="canvas22" Width="90" Height="90" Background="White" Grid.Column="1" Grid.Row="4"></Canvas>
+            <Canvas x:Name="canvas23" Width="90" Height="90" Background="White" Grid.Column="2" Grid.Row="4"></Canvas>
+            <Canvas x:Name="canvas24" Width="90" Height="90" Background="White" Grid.Column="3" Grid.Row="4"></Canvas>
+            <Canvas x:Name="canvas25" Width="90" Height="90" Background="White" Grid.Column="4" Grid.Row="4"></Canvas>
+        </Grid>
+
+        <Grid Grid.Column="9" Grid.Row="1" Grid.RowSpan="5" Margin="5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Label x:Name="lblVillageStatistics" Grid.ColumnSpan="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Black">Vilage Statistics</Label>
+
+            <Label x:Name="lblCitizens" Grid.Row="1" VerticalContentAlignment="Center">Total Citizens:</Label>
+            <ProgressBar x:Name="prgBrCitizens" Grid.Column="1" Grid.Row="1" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
+            <Label x:Name="lblValueCitizens" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrCitizens, Path=Value, Mode=OneWay}"></Label>
+
+            <Label x:Name="lblHappiness" Grid.Row="2" VerticalContentAlignment="Center">Happiness:</Label>
+            <ProgressBar x:Name="prgBrHappiness" Grid.Column="1" Grid.Row="2" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
+            <Label x:Name="lblValueHappiness" Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrHappiness, Path=Value, Mode=OneWay}"></Label>
+
+            <Label x:Name="lblHealth" Grid.Row="3" VerticalContentAlignment="Center">Health:</Label>
+            <ProgressBar x:Name="prgBrHealth" Grid.Column="1" Grid.Row="3" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
+            <Label x:Name="lblValueHealth" Grid.Column="1" Grid.Row="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrHealth, Path=Value, Mode=OneWay}"></Label>
+
+            <Label x:Name="lblDefense" Grid.Row="4" VerticalContentAlignment="Center">Defense:</Label>
+            <ProgressBar x:Name="prgBrDefense" Grid.Column="1" Grid.Row="4" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
+            <Label x:Name="lblValueDefense" Grid.Column="1" Grid.Row="4" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrDefense, Path=Value, Mode=OneWay}"></Label>
+
+            <Label x:Name="lblRecources" Grid.Row="5"  Grid.ColumnSpan="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Black">Recourses</Label>
+
+            <Label x:Name="lblMaterials" Grid.Row="6" VerticalContentAlignment="Center">Materials:</Label>
+            <ProgressBar x:Name="prgBrMaterials" Grid.Column="1" Grid.Row="6" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
+            <Label x:Name="lblValueMaterials" Grid.Column="1" Grid.Row="6" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrMaterials, Path=Value, Mode=OneWay}"></Label>
+
+            <Label x:Name="lblWheat" Grid.Row="7" VerticalContentAlignment="Center">Wheat:</Label>
+            <ProgressBar x:Name="prgBrWheat" Grid.Column="1" Grid.Row="7" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
+            <Label x:Name="lblValueWheat" Grid.Column="1" Grid.Row="7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrWheat, Path=Value, Mode=OneWay}"></Label>
+
+            <Label x:Name="lblBread" Grid.Row="8" VerticalContentAlignment="Center">Bread:</Label>
+            <ProgressBar x:Name="prgBrBread" Grid.Column="1" Grid.Row="8" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
+            <Label x:Name="lblValueBread" Grid.Column="1" Grid.Row="8" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrBread, Path=Value, Mode=OneWay}"></Label>
+
+            <Label x:Name="lblProductionPerPhase" Grid.ColumnSpan="2" Grid.Row="9" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Black">Production Per Phase</Label>
+
+            <Label x:Name="lblMaterialsPerHour" Grid.Row="10" VerticalContentAlignment="Center">Materials:</Label>
+            <ProgressBar x:Name="prgBrMaterialsPerHour" Grid.Column="1" Grid.Row="10" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
+            <Label x:Name="lblValueMaterialsPerHour" Grid.Column="1" Grid.Row="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrMaterialsPerHour, Path=Value, Mode=OneWay}"></Label>
+
+            <Label x:Name="lblWheatPerHour" Grid.Row="11" VerticalContentAlignment="Center">Wheat:</Label>
+            <ProgressBar x:Name="prgBrWheatPerHour" Grid.Column="1" Grid.Row="11" Background="White" BorderBrush="Black" Value="0" Margin="5" Width="230" Height="20"/>
+            <Label x:Name="lblValueWheatPerHour" Grid.Column="1" Grid.Row="11" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="{Binding ElementName=prgBrWheatPerHour, Path=Value, Mode=OneWay}"></Label>
+
+            <Label x:Name="lblRound" Grid.Column="2" Grid.Row="13" HorizontalContentAlignment="Right" Margin="5">Round : 0/0</Label>
+        </Grid>
+        <Label x:Name="lblTownhall" Grid.Column="3" Grid.Row="6" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="Goldenrod" FontWeight="Bold">TH</Label>
+        <Label x:Name="lblField" Grid.Column="4" Grid.Row="6" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="DarkOliveGreen" FontWeight="Bold">FIELD</Label>
+        <Label x:Name="lblMine" Grid.Column="5" Grid.Row="6" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="DimGray" FontWeight="Bold">MINE</Label>
+        <Label x:Name="lblHouse" Grid.Column="6" Grid.Row="7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="SlateBlue" FontWeight="Bold">HOUSE</Label>
+        <Label x:Name="lblDefens" Grid.Column="7" Grid.Row="7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="OrangeRed" FontWeight="Bold">DEFEN</Label>
+        <Label x:Name="lblEmpty" Grid.Column="8" Grid.Row="7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="RosyBrown" FontWeight="Bold">EMPTY</Label>
+    </Grid>
+</Window>
