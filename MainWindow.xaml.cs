@@ -26,7 +26,6 @@ namespace Game_project_OOP
         int clickedCanvasNumber;
         GamePhase currentPhase;
         bool isFirstRound = true;
-        AI ai = new AI();
         Game game = new Game();
         City city = new City();
         Mine mine = new Mine();
@@ -412,19 +411,19 @@ namespace Game_project_OOP
                 {
                     gameOutput += "A village is attacking you! It's a pretty small village so they don't do much damage.\n\r" +
                         "The mayor retreats his troops as you are still much to strong for his village.\n\r";
-                    ai.AIAttack(city);
+                    gameOutput += AI.AIAttack(city, 1);
                 }
                 if (6 < randNum && randNum <= 9)
                 {
                     gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
                         "The mayor calls his troops back a minor loss for your village..\n\r";
-                    ai.AIAttack(city);
+                    gameOutput += AI.AIAttack(city, 2);
                 }
                 if (10 <= randNum)
                 {
                     gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
                             "The mayor calls his troops back a great loss for your village.\n\r";
-                    ai.AIAttack(city);
+                    gameOutput += AI.AIAttack(city, 3);
                 }
             }
         }
