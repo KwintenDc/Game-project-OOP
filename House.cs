@@ -9,7 +9,7 @@ namespace Game_project_OOP
     class House : Building
     {
 		private int housingSpace = 10;
-
+		
 		public int HousingSpace
 		{
 			get { return housingSpace; }

@@ -9,7 +9,7 @@ namespace Game_project_OOP
     class Game
     {
 		private string saveGame;
-
+        
 		public string SaveGame
 		{
 			get { return saveGame; }

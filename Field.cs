@@ -10,7 +10,7 @@ namespace Game_project_OOP
     class Field : Building
     {
         private int productionPerRound = 10;
-
+        
         public int ProductionsPerRound
         {
             get { return productionPerRound; }
