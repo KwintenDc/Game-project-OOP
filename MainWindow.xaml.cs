@@ -22,8 +22,8 @@ namespace Game_project_OOP
     /// </summary>
     public partial class MainWindow : Window
     {
-        Canvas clickedCanvas;
-        int clickedCanvasNumber;
+        Path clickedPath;
+        int clickedPathNumber;
         GamePhase currentPhase;
         bool isFirstRound = true;
         Game game = new Game();
@@ -53,36 +53,32 @@ namespace Game_project_OOP
             // Set the DataContext of the window to this instance
             DataContext = this;
 
-            // Link all click events to 1 method.
-            canvas1.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas2.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas3.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas4.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas5.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-
-            canvas6.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas7.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas8.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas9.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas10.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-
-            canvas11.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas12.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas13.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas14.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas15.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-
-            canvas16.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas17.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas18.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas19.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas20.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-
-            canvas21.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas22.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas23.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas24.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
-            canvas25.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
+            path1.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path2.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path3.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path3.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path4.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path5.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path6.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path7.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path8.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path9.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path10.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path11.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path12.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path13.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path14.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path15.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path16.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path17.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path18.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path19.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path20.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path21.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path22.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path23.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path24.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
+            path25.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
 
             btnSubmit.Click += BtnSubmit_Click;
             txbxUserInput.KeyDown += txBxUserInput_KeyDown;
@@ -106,18 +102,17 @@ namespace Game_project_OOP
             }
         }
 
-        private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Paths_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            clickedCanvas = (Canvas)sender;
-
+            clickedPath = (Path)sender;
             if (gameOutput.Contains("Pick an empty spot"))
             {
                 // Extract the number from the canvas name.
-                string numberPart = clickedCanvas.Name.Replace("canvas", "");
-                clickedCanvasNumber = Int32.Parse(numberPart);
-            }
+                string numberPart = clickedPath.Name.Replace("path", "");
+                clickedPathNumber = Int32.Parse(numberPart);
 
-            GameMain();
+                GameMain();
+            }
         }
 
         public void Init_Game()
@@ -144,7 +139,7 @@ namespace Game_project_OOP
             city.Defense = 0;
 
             // Setting starting resources.
-            city.AddResource("Bread",100);
+            city.AddResource("Bread",10);
             bread = city.Resources.FirstOrDefault(r => r.Name == "Bread");
             
             city.AddResource("Wheat", 100);
@@ -191,14 +186,12 @@ namespace Game_project_OOP
                         BuildingPhase();
                         CraftingPhase();
                         DefendingPhase();
-                        RepairingPhase();
                         break;
                     case 2:
                         BuildingPhase();
                         CraftingPhase();
                         UpgradingPhase();
                         DefendingPhase();
-                        RepairingPhase();
                         break;
                     case 3:
                         BuildingPhase();
@@ -206,7 +199,6 @@ namespace Game_project_OOP
                         TradingPhase();
                         UpgradingPhase();
                         DefendingPhase();
-                        RepairingPhase();
                         break;
                     default:
                         currentPhase = GamePhase.GameOver;
@@ -217,6 +209,7 @@ namespace Game_project_OOP
                 UpdateUI();
             }
         }
+
         private void BuildingPhase()
         {
             // Code for building phase.
@@ -234,11 +227,11 @@ namespace Game_project_OOP
                         {
                             case "1":
                                 gameOutput += "Pick an empty spot for your new field.\n\r";
-                                if((clickedCanvasNumber != 0) && (city.CityLayout[clickedCanvasNumber - 1] == "E")) 
+                                if((clickedPathNumber != 0) && (city.CityLayout[clickedPathNumber - 1] == "E")) 
                                 {
                                     if (city.MaxFields != city.TotalFields)
                                     {
-                                        city.CityLayout[clickedCanvasNumber - 1] = "F";
+                                        city.CityLayout[clickedPathNumber - 1] = "F";
                                         city.RemoveResource("Materials", field.MaterialsRequired);
                                         city.TotalFields++;
                                         if(isFirstRound)
@@ -257,15 +250,15 @@ namespace Game_project_OOP
                                         userInput = null;
                                     }
                                 }
-                                clickedCanvasNumber = 0;
+                                clickedPathNumber = 0;
                                 break;
                             case "2":
                                 gameOutput += "Pick an empty spot for your new mine.\n\r";
-                                if ((clickedCanvasNumber != 0) && (city.CityLayout[clickedCanvasNumber - 1] == "E"))
+                                if ((clickedPathNumber != 0) && (city.CityLayout[clickedPathNumber - 1] == "E"))
                                 {
                                     if (city.MaxMines != city.TotalMines)
                                     {
-                                        city.CityLayout[clickedCanvasNumber - 1] = "M";
+                                        city.CityLayout[clickedPathNumber - 1] = "M";
                                         city.RemoveResource("Materials", field.MaterialsRequired);
                                         city.TotalMines++;
                                         if (isFirstRound)
@@ -284,15 +277,15 @@ namespace Game_project_OOP
                                         userInput = null;
                                     }
                                 }
-                                clickedCanvasNumber = 0;
+                                clickedPathNumber = 0;
                                 break;
                             case "3":
                                 gameOutput += "Pick an empty spot for your new house.\n\r";
-                                if ((clickedCanvasNumber != 0) && (city.CityLayout[clickedCanvasNumber - 1] == "E"))
+                                if ((clickedPathNumber != 0) && (city.CityLayout[clickedPathNumber - 1] == "E"))
                                 {
                                     if (city.MaxHouses != city.TotalHouses)
                                     {
-                                        city.CityLayout[clickedCanvasNumber - 1] = "H";
+                                        city.CityLayout[clickedPathNumber - 1] = "H";
                                         city.RemoveResource("Materials", field.MaterialsRequired);
                                         city.TotalHouses++;
                                         if (isFirstRound)
@@ -311,7 +304,7 @@ namespace Game_project_OOP
                                         userInput = null;
                                     }
                                 }
-                                clickedCanvasNumber = 0;
+                                clickedPathNumber = 0;
                                 break;
                             default:
                                 gameOutput += "Pick a valid option (1 , 2 , 3)";
@@ -398,6 +391,7 @@ namespace Game_project_OOP
             // Code for upgrading phase.
             if(currentPhase == GamePhase.Upgrading) 
             {
+
             }
         }
         private void DefendingPhase()
@@ -448,6 +442,8 @@ namespace Game_project_OOP
         {
             city.AddResource("Materials", mine.ProductionsPerRound * city.TotalMines);
             city.AddResource("Wheat", field.ProductionsPerRound * city.TotalFields);
+            city.Citizens += (bread.Amount - (bread.Amount % 4)) / 4;
+            bread.Amount -= (bread.Amount - (bread.Amount % 4));
         }
 
         private void UpdateUI()
@@ -496,31 +492,31 @@ namespace Game_project_OOP
         {
             for (int i = 0; i < 25; i++)
             {
-                // Find the canvas control by its name
-                Canvas canvas = (Canvas)FindName($"canvas{i + 1}");
+                // Find the path control by its name
+                Path path = (Path)FindName($"path{i + 1}");
 
-                switch (city.CityLayout[i]) 
+                switch (city.CityLayout[i])
                 {
                     case "0":
-                        canvas.Background = Brushes.White;
+                        path.Fill = Brushes.White;
                         break;
                     case "E":
-                        canvas.Background = Brushes.RosyBrown;
+                        path.Fill = Brushes.SaddleBrown;
                         break;
                     case "F":
-                        canvas.Background = Brushes.DarkOliveGreen;
+                        path.Fill = Brushes.DarkOliveGreen;
                         break;
                     case "M":
-                        canvas.Background = Brushes.DimGray;
+                        path.Fill = Brushes.DimGray;
                         break;
                     case "T":
-                        canvas.Background = Brushes.Goldenrod;
+                        path.Fill = Brushes.Goldenrod;
                         break;
                     case "D":
-                        canvas.Background = Brushes.OrangeRed;
+                        path.Fill = Brushes.OrangeRed;
                         break;
                     case "H":
-                        canvas.Background = Brushes.SlateBlue;
+                        path.Fill = Brushes.SlateBlue;
                         break;
                 }
             }

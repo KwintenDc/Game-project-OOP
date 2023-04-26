@@ -15,9 +15,5 @@ namespace Game_project_OOP
         {
             get { return materialsRequired; }
         }
-		public void UpgradeBuilding()
-		{
-
-		}
 	}
 }

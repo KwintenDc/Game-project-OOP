@@ -42,49 +42,360 @@
 
         <Label x:Name="lblVillageLayout" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="6" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Black">Village Layout</Label>
         <Grid Grid.Column="3" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="6">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <Canvas x:Name="canvas1" Width="90" Height="90" Background="White" Grid.Column="0" Grid.Row="0"></Canvas>
-            <Canvas x:Name="canvas2" Width="90" Height="90" Background="White" Grid.Column="1" Grid.Row="0"></Canvas>
-            <Canvas x:Name="canvas3" Width="90" Height="90" Background="White" Grid.Column="2" Grid.Row="0"></Canvas>
-            <Canvas x:Name="canvas4" Width="90" Height="90" Background="White" Grid.Column="3" Grid.Row="0"></Canvas>
-            <Canvas x:Name="canvas5" Width="90" Height="90" Background="White" Grid.Column="4" Grid.Row="0"></Canvas>
-
-            <Canvas x:Name="canvas6" Width="90" Height="90" Background="White" Grid.Column="0" Grid.Row="1"></Canvas>
-            <Canvas x:Name="canvas7" Width="90" Height="90" Background="DarkOliveGreen" Grid.Column="1" Grid.Row="1"></Canvas>
-            <Canvas x:Name="canvas8" Width="90" Height="90" Background="RosyBrown" Grid.Column="2" Grid.Row="1"></Canvas>
-            <Canvas x:Name="canvas9" Width="90" Height="90" Background="DimGray" Grid.Column="3" Grid.Row="1"></Canvas>
-            <Canvas x:Name="canvas10" Width="90" Height="90" Background="White" Grid.Column="4" Grid.Row="1"></Canvas>
-
-            <Canvas x:Name="canvas11" Width="90" Height="90" Background="White" Grid.Column="0" Grid.Row="2"></Canvas>
-            <Canvas x:Name="canvas12" Width="90" Height="90" Background="RosyBrown" Grid.Column="1" Grid.Row="2"></Canvas>
-            <Canvas x:Name="canvas13" Width="90" Height="90" Background="Goldenrod" Grid.Column="2" Grid.Row="2"></Canvas>
-            <Canvas x:Name="canvas14" Width="90" Height="90" Background="RosyBrown" Grid.Column="3" Grid.Row="2"></Canvas>
-            <Canvas x:Name="canvas15" Width="90" Height="90" Background="White" Grid.Column="4" Grid.Row="2"></Canvas>
-
-            <Canvas x:Name="canvas16" Width="90" Height="90" Background="White" Grid.Column="0" Grid.Row="3"></Canvas>
-            <Canvas x:Name="canvas17" Width="90" Height="90" Background="DimGray" Grid.Column="1" Grid.Row="3"></Canvas>
-            <Canvas x:Name="canvas18" Width="90" Height="90" Background="RosyBrown" Grid.Column="2" Grid.Row="3" Margin="5,0,5,4" VerticalAlignment="Bottom"></Canvas>
-            <Canvas x:Name="canvas19" Width="90" Height="90" Background="DarkOliveGreen" Grid.Column="3" Grid.Row="3"></Canvas>
-            <Canvas x:Name="canvas20" Width="90" Height="90" Background="White" Grid.Column="4" Grid.Row="3"></Canvas>
-
-            <Canvas x:Name="canvas21" Width="90" Height="90" Background="White" Grid.Column="0" Grid.Row="4"></Canvas>
-            <Canvas x:Name="canvas22" Width="90" Height="90" Background="White" Grid.Column="1" Grid.Row="4"></Canvas>
-            <Canvas x:Name="canvas23" Width="90" Height="90" Background="White" Grid.Column="2" Grid.Row="4"></Canvas>
-            <Canvas x:Name="canvas24" Width="90" Height="90" Background="White" Grid.Column="3" Grid.Row="4"></Canvas>
-            <Canvas x:Name="canvas25" Width="90" Height="90" Background="White" Grid.Column="4" Grid.Row="4"></Canvas>
+            <Canvas>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path1">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="0,0">
+                                <LineSegment Point="100,0" />
+                                <LineSegment Point="100,50" />
+                                <LineSegment Point="60,70" />
+                                <LineSegment Point="0,70" />
+                                <LineSegment Point="0,0" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path2">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="100,0">
+                                <LineSegment Point="205,0" />
+                                <LineSegment Point="205,20" />
+                                <LineSegment Point="190,50" />
+                                <LineSegment Point="170,45" />
+                                <LineSegment Point="100,50" />
+                                <LineSegment Point="100,0" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path3">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="205,0">
+                                <LineSegment Point="335,0" />
+                                <LineSegment Point="345,50" />
+                                <LineSegment Point="325,90" />
+                                <LineSegment Point="260,90" />
+                                <LineSegment Point="210,50" />
+                                <LineSegment Point="190,50" />
+                                <LineSegment Point="205,20" />
+                                <LineSegment Point="205,0" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path4">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="335,0">
+                                <LineSegment Point="420,0" />
+                                <LineSegment Point="430,70" />
+                                <LineSegment Point="400,70" />
+                                <LineSegment Point="345,50" />
+                                <LineSegment Point="335,0" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path5">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="420,0">
+                                <LineSegment Point="498,0" />
+                                <LineSegment Point="498,110" />
+                                <LineSegment Point="420,95" />
+                                <LineSegment Point="430,70" />
+                                <LineSegment Point="420,0" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path6">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="0,70">
+                                <LineSegment Point="60,70"  />
+                                <LineSegment Point="100,50"/>
+                                <LineSegment Point="140,47"/>
+                                <LineSegment Point="145,100"/>
+                                <LineSegment Point="50,150"/>
+                                <LineSegment Point="0,150"/>
+                                <LineSegment Point="0,70"/>
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path7">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="145,47">
+                                <LineSegment Point="170,45" />
+                                <LineSegment Point="190,50" />
+                                <LineSegment Point="210,50" />
+                                <LineSegment Point="260,90" />
+                                <LineSegment Point="260,150" />
+                                <LineSegment Point="130,140" />
+                                <LineSegment Point="100,122" />
+                                <LineSegment Point="145,100" />
+                                <LineSegment Point="140,47" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path8">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="260,90">
+                                <LineSegment Point="325,90" />
+                                <LineSegment Point="345,50" />
+                                <LineSegment Point="355,145" />
+                                <LineSegment Point="260,155" />
+                                <LineSegment Point="260,90" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path9">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="345,50">
+                                <LineSegment Point="400,70" />
+                                <LineSegment Point="430,70" />
+                                <LineSegment Point="420,95" />
+                                <LineSegment Point="410,160" />
+                                <LineSegment Point="355,160" />
+                                <LineSegment Point="355,145" />
+                                <LineSegment Point="345,50" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path10">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="420,95">
+                                <LineSegment Point="498,110" />
+                                <LineSegment Point="498,190" />
+                                <LineSegment Point="410,160" />
+                                <LineSegment Point="420,95" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path11">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="0,150">
+                                <LineSegment Point="50,150" />
+                                <LineSegment Point="100,123" />
+                                <LineSegment Point="130,140" />
+                                <LineSegment Point="140,220" />
+                                <LineSegment Point="70,250" />
+                                <LineSegment Point="0,250" />
+                                <LineSegment Point="0,150" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path12">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="130,140">
+                                <LineSegment Point="260,150" />
+                                <LineSegment Point="260,155" />
+                                <LineSegment Point="200,200" />
+                                <LineSegment Point="200,260" />
+                                <LineSegment Point="70,250" />
+                                <LineSegment Point="140,220" />
+                                <LineSegment Point="130,140" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="3" x:Name="path13">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="200,200">
+                                <LineSegment Point="260,155" />
+                                <LineSegment Point="355,145" />
+                                <LineSegment Point="355,160" />
+                                <LineSegment Point="380,250" />
+                                <LineSegment Point="300,270" />
+                                <LineSegment Point="200,200" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path14">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="355,160">
+                                <LineSegment Point="410,160" />
+                                <LineSegment Point="450,173" />
+                                <LineSegment Point="450,280" />
+                                <LineSegment Point="380,250" />
+                                <LineSegment Point="355,160" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path15">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="450,173">
+                                <LineSegment Point="498,190" />
+                                <LineSegment Point="498,290" />
+                                <LineSegment Point="450,290" />
+                                <LineSegment Point="450,173" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path16">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="0,250">
+                                <LineSegment Point="70,250" />
+                                <LineSegment Point="130,255" />
+                                <LineSegment Point="130,285" />
+                                <LineSegment Point="70,340" />
+                                <LineSegment Point="0,350" />
+                                <LineSegment Point="0,250" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path17">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="130,255">
+                                <LineSegment Point="200,260" />
+                                <LineSegment Point="200,200" />
+                                <LineSegment Point="250,235" />
+                                <LineSegment Point="210,310" />
+                                <LineSegment Point="130,285" />
+                                <LineSegment Point="130,255" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path18">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="250,235">
+                                <LineSegment Point="300,270" />
+                                <LineSegment Point="370,252" />
+                                <LineSegment Point="330,350" />
+                                <LineSegment Point="235,350" />
+                                <LineSegment Point="210,310" />
+                                <LineSegment Point="250,235" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path19">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="370,252">
+                                <LineSegment Point="380,250" />
+                                <LineSegment Point="450,280" />
+                                <LineSegment Point="450,290" />
+                                <LineSegment Point="390,330" />
+                                <LineSegment Point="336,335" />
+                                <LineSegment Point="370,252" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path20">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="450,290">
+                                <LineSegment Point="498,290" />
+                                <LineSegment Point="498,325" />
+                                <LineSegment Point="440,345" />
+                                <LineSegment Point="400,345" />
+                                <LineSegment Point="390,330" />
+                                <LineSegment Point="450,290" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path21">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="0,350">
+                                <LineSegment Point="70,340" />
+                                <LineSegment Point="90,321" />
+                                <LineSegment Point="120,390" />
+                                <LineSegment Point="90,460" />
+                                <LineSegment Point="0,460" />
+                                <LineSegment Point="0,350" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path22">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="130,285">
+                                <LineSegment Point="210,310" />
+                                <LineSegment Point="235,350" />
+                                <LineSegment Point="235,420" />
+                                <LineSegment Point="135,460" />
+                                <LineSegment Point="80,460" />
+                                <LineSegment Point="120,390" />
+                                <LineSegment Point="90,322" />
+                                <LineSegment Point="130,285" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path23">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="360,333">
+                                <LineSegment Point="336,335" />
+                                <LineSegment Point="330,350" />
+                                <LineSegment Point="235,350" />
+                                <LineSegment Point="235,420" />
+                                <LineSegment Point="135,460" />
+                                <LineSegment Point="280,460" />
+                                <LineSegment Point="360,333" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path24">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="360,333">
+                                <LineSegment Point="390,330" />
+                                <LineSegment Point="400,345" />
+                                <LineSegment Point="450,460" />
+                                <LineSegment Point="280,460" />
+                                <LineSegment Point="360,333" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path25">
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="400,345">
+                                <LineSegment Point="440,345" />
+                                <LineSegment Point="498,325" />
+                                <LineSegment Point="498,460" />
+                                <LineSegment Point="450,460" />
+                                <LineSegment Point="400,345" />
+                                <LineSegment Point="400,345" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+            </Canvas>
         </Grid>
 
         <Grid Grid.Column="9" Grid.Row="1" Grid.RowSpan="5" Margin="5,0">
@@ -152,11 +463,11 @@
 
             <Label x:Name="lblRound" Grid.Column="2" Grid.Row="13" HorizontalContentAlignment="Right" Margin="5">Round : 0/0</Label>
         </Grid>
-        <Label x:Name="lblTownhall" Grid.Column="3" Grid.Row="6" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="Goldenrod" FontWeight="Bold">TH</Label>
+        <Label x:Name="lblTownhall" Grid.Column="3" Grid.Row="6" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="Goldenrod" FontWeight="Bold">CAPIT</Label>
         <Label x:Name="lblField" Grid.Column="4" Grid.Row="6" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="DarkOliveGreen" FontWeight="Bold">FIELD</Label>
         <Label x:Name="lblMine" Grid.Column="5" Grid.Row="6" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="DimGray" FontWeight="Bold">MINE</Label>
         <Label x:Name="lblHouse" Grid.Column="6" Grid.Row="7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="SlateBlue" FontWeight="Bold">HOUSE</Label>
         <Label x:Name="lblDefens" Grid.Column="7" Grid.Row="7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="OrangeRed" FontWeight="Bold">DEFEN</Label>
-        <Label x:Name="lblEmpty" Grid.Column="8" Grid.Row="7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="RosyBrown" FontWeight="Bold">EMPTY</Label>
+        <Label x:Name="lblEmpty" Grid.Column="8" Grid.Row="7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="2" Background="SaddleBrown" FontWeight="Bold">EMPTY</Label>
     </Grid>
 </Window>
