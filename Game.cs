@@ -25,9 +25,9 @@ namespace Game_project_OOP
        Building,
        Crafting,
        Defending,
-       Repairing,
        Trading,
        Upgrading,
+       Transition,
        GameOver
     }
 }

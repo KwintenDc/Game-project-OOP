@@ -15,5 +15,14 @@ namespace Game_project_OOP
         {
             get { return materialsRequired; }
         }
-	}
+
+        private int materialsRequiredToUpgrade = 30;
+
+        public int MaterialsRequiredToUpgrade
+        {
+            get { return materialsRequiredToUpgrade; }
+            set { materialsRequiredToUpgrade = value; }
+        }
+
+    }
 }
