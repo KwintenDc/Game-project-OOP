@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Game_project_OOP
@@ -24,8 +16,9 @@ namespace Game_project_OOP
     {
         Path clickedPath;
         int clickedPathNumber;
-        GamePhase currentPhase;
+        GamePhase currentPhase, nextPhase;
         bool isFirstRound = true;
+        bool EnterPressed, RoundFinished;
         Game game = new Game();
         City city = new City();
         Mine mine = new Mine();
@@ -91,12 +84,12 @@ namespace Game_project_OOP
             userInput = txbxUserInput.Text;
             txbxUserInput.Text = "";
             GameMain();
+            GameMain();
         }
         private void txBxUserInput_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                // trigger the click event of the button
                 // Trigger the click event of the button
                 BtnSubmit_Click(sender, e);
             }
@@ -207,6 +200,8 @@ namespace Game_project_OOP
                         currentPhase = GamePhase.GameOver;
                         break;
                 }
+                if(currentPhase == GamePhase.Wait)
+                    AddRecoursesAfterRound();
                 UpdateGameText(gameOutput);
                 DrawGameBoard();
                 UpdateUI();
@@ -319,8 +314,8 @@ namespace Game_project_OOP
                     }
                     if (game.Round > 3)
                     {
-                        game.Round = 1;
-                        currentPhase = GamePhase.Crafting;
+                        nextPhase = GamePhase.Crafting;
+                        RoundFinished = true;
                         AddRecoursesAfterRound();
                     }
                 }
@@ -347,8 +342,9 @@ namespace Game_project_OOP
                             case "2":
                                 gameOutput = "<<< CRAFTING PHASE >>>\n\r";
                                 gameOutput += "Okey, the wheat will be saved for later.\n\r";
-                                currentPhase = GamePhase.Defending;
+                                nextPhase = GamePhase.Defending;
                                 userInput = null;
+                                RoundFinished = true;
                                 AddRecoursesAfterRound();
                                 return;
                             default:
@@ -369,8 +365,9 @@ namespace Game_project_OOP
                                     city.RemoveResource("Wheat", Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO);
                                     userInput = null;
                                     userChoice = "0";
+                                    nextPhase = GamePhase.Defending;
+                                    RoundFinished = true;
                                     AddRecoursesAfterRound();
-                                    currentPhase = GamePhase.Defending;
                                     return;
                                 }
                             }
@@ -385,8 +382,9 @@ namespace Game_project_OOP
                                     city.RemoveResource("Wheat", Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO);
                                     userInput = null;
                                     userChoice = "0";
+                                    RoundFinished = true;
                                     AddRecoursesAfterRound();
-                                    currentPhase = GamePhase.Defending;
+                                    nextPhase = GamePhase.Defending;
                                     return;
                                 }
                             }
@@ -412,33 +410,30 @@ namespace Game_project_OOP
             {
                 if (game.Part == 1)
                 {
-                    if (userInput == null)
+                    gameOutput = "<<< DEFENDING PHASE >>>\n\r";
+                    randNum = random.Next(1, 11);
+                    if (randNum <= 6)
                     {
-                        gameOutput = "<<< DEFENDING PHASE >>>\n\r";
-                        randNum = random.Next(1, 11);
-                        if (randNum <= 6)
-                        {
-                            gameOutput += "A village is attacking you! It's a pretty small village so they don't do much damage.\n\r" +
-                                "The mayor retreats his troops as you are still much to strong for his village.\n\r";
-                            gameOutput += AI.AIAttack(city, 1);
-                            gameOutput += "\r\n\nPress Enter to go to next phase";
-                        }
-                        if (6 < randNum && randNum <= 9)
-                        {
-                            gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
-                                "The mayor calls his troops back a minor loss for your village..\n\r";
-                            gameOutput += AI.AIAttack(city, 2);
-                            gameOutput += "\r\n\nPress Enter to go to next phase";
-                        }
-                        if (10 <= randNum)
-                        {
-                            gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
-                                    "The mayor calls his troops back a great loss for your village.\n\r";
-                            gameOutput += AI.AIAttack(city, 3);
-                            gameOutput += "\r\n\nPress Enter to go to next phase";
-                        }
+                        gameOutput += "A village is attacking you! It's a pretty small village so they don't do much damage.\n\r" +
+                            "The mayor retreats his troops as you are still much to strong for his village.\n\r";
+                        gameOutput += AI.AIAttack(city, 1);
+                        gameOutput += "\r\n\n1. Go to next phase";
                     }
-                    else
+                    if (6 < randNum && randNum <= 9)
+                    {
+                        gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
+                            "The mayor calls his troops back a minor loss for your village..\n\r";
+                        gameOutput += AI.AIAttack(city, 2);
+                        gameOutput += "\r\n\n1. Go to next phase";
+                    }
+                    if (10 <= randNum)
+                    {
+                        gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
+                                "The mayor calls his troops back a great loss for your village.\n\r";
+                        gameOutput += AI.AIAttack(city, 3);
+                        gameOutput += "\r\n\n1. Go to next phase";
+                    }
+                    if(userInput != null)
                     {
                         currentPhase = GamePhase.Transition;
                         userInput = null;
@@ -480,14 +475,45 @@ namespace Game_project_OOP
             }
         }
 
-        private void AddRecoursesAfterRound() 
+        private void AddRecoursesAfterRound()
         {
-            city.AddResource("Materials", mine.ProductionsPerRound * city.TotalMines);
-            city.AddResource("Wheat", field.ProductionsPerRound * city.TotalFields);
-            city.Citizens += (bread.Amount - (bread.Amount % 4)) / 4;
-            bread.Amount -= (bread.Amount - (bread.Amount % 4));
+            if (RoundFinished)
+            {
+                currentPhase = GamePhase.Wait;
+                gameOutput = "<<< Recource Update >>>\n\r";
+                gameOutput += $"New Materials : {mine.ProductionsPerRound * city.TotalMines}\n\r";
+                gameOutput += $"New Wheat : {field.ProductionsPerRound * city.TotalFields}\n\r";
+                gameOutput += $"Bread to be consumed: {(bread.Amount - (bread.Amount % 4))}\n\r";
+                gameOutput += $"Possible new citizens: {(bread.Amount - (bread.Amount % 4)) / 4}\n\r";
+                gameOutput += "1. Distribute for new citzens 2. Don't use bread.\n\r";
+                switch (userInput)
+                {
+                    case "1":
+                        city.AddResource("Materials", mine.ProductionsPerRound * city.TotalMines);
+                        city.AddResource("Wheat", field.ProductionsPerRound * city.TotalFields);
+                        city.Citizens += (bread.Amount - (bread.Amount % 4)) / 4;
+                        bread.Amount -= (bread.Amount - (bread.Amount % 4));
+                        currentPhase = nextPhase;
+                        RoundFinished = false;
+                        game.Round = 1;
+                        userInput = null;
+                        break;
+                    case "2":
+                        city.AddResource("Materials", mine.ProductionsPerRound * city.TotalMines);
+                        city.AddResource("Wheat", field.ProductionsPerRound * city.TotalFields);
+                        currentPhase = nextPhase;
+                        RoundFinished = false;
+                        game.Round = 1;
+                        userInput = null;
+                        break;
+                    case null:
+                        break;
+                    default:
+                        gameOutput += "Pick a valid option. (1 , 2)";
+                        break;
+                }
+            }
         }
-
         private void UpdateUI()
         {
             // Update the progressbar values.

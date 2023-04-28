@@ -28,6 +28,7 @@ namespace Game_project_OOP
        Trading,
        Upgrading,
        Transition,
+       Wait,
        GameOver
     }
 }

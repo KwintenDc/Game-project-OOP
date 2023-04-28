@@ -19,6 +19,7 @@ namespace Game_project_OOP
 
             // Reduce the city's happiness and number of citizens based on the damage.
             city.Happiness -= damage * 2;
+            city.Health-= damage;
             city.Citizens -= damage;
 
             // Reduce the materials based on the damage.

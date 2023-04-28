@@ -214,7 +214,7 @@
                         </PathGeometry>
                     </Path.Data>
                 </Path>
-                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="3" x:Name="path13">
+                <Path Fill="DarkOliveGreen" Stroke="Black" StrokeThickness="1" x:Name="path13">
                     <Path.Data>
                         <PathGeometry>
                             <PathFigure StartPoint="200,200">
