@@ -30,7 +30,7 @@ namespace Game_project_OOP
         string gameOutput, userInput, userChoice;
         int WHEAT_TO_BREAD_RATIO = 3;
         Random random = new Random();
-        int randNum;
+        int randNum, totalEmptyFields = 20;
 
         public string TltpCitizens { get; set; }
         public string TltpHappiness { get; set; }
@@ -193,13 +193,13 @@ namespace Game_project_OOP
                         TransitionPhase();
                         break;
                     case 3:
-                        if (!Part3Finished)
+                        if(!Part3Finished || (totalEmptyFields != 0))
                             BuildingPhase();
                         CraftingPhase();
                         TradingPhase();
                         UpgradingPhase();
                         DefendingPhase();
-                        if (!Part3Finished)
+                        if(!Part3Finished)
                             TransitionPhase();
                         break;
                     default:
@@ -260,6 +260,7 @@ namespace Game_project_OOP
                                         // Reset vars for following round.
                                         gameOutput = gameOutput.Replace("\nPick an empty spot for your new field.\n\r", "");
                                         userInput = null;
+                                        totalEmptyFields--;
                                     }
                                     else
                                     {
@@ -287,6 +288,7 @@ namespace Game_project_OOP
                                         // Reset vars for following round.
                                         gameOutput = gameOutput.Replace("\nPick an empty spot for your new mine.\n\r", "");
                                         userInput = null;
+                                        totalEmptyFields--;
                                     }
                                     else
                                     {
@@ -314,6 +316,7 @@ namespace Game_project_OOP
                                         // Reset vars for following round.
                                         gameOutput = gameOutput.Replace("\nPick an empty spot for your new house.\n\r", "");
                                         userInput = null;
+                                        totalEmptyFields--;
                                     }
                                     else
                                     {
@@ -343,6 +346,7 @@ namespace Game_project_OOP
                                             // Reset vars for following round.
                                             gameOutput = gameOutput.Replace("\nPick an empty spot for your new defensive building.\n\r", "");
                                             userInput = null;
+                                            totalEmptyFields--;
                                         }
                                         else
                                         {
@@ -365,11 +369,12 @@ namespace Game_project_OOP
                         }
                     }
                 }
-                if (game.Round > game.TotalRounds - 1)
+                if ((game.Round > game.TotalRounds - 1) || (materials.Amount < 20))
                 {
                     isFirstRound = true;
                     nextPhase = GamePhase.Crafting;
                     RoundFinished = true;
+                    game.Round = game.TotalRounds;
                     AddRecoursesAfterRound();
                 }
                 
@@ -488,9 +493,14 @@ namespace Game_project_OOP
                 {
                     currentPhase = GamePhase.Transition;
                     userInput = null;
-                    if (Part3Finished)
+                    if (Part3Finished && (totalEmptyFields == 0))
                     {
                         currentPhase = GamePhase.Crafting;
+                        isFirstRound = true;
+                    }
+                    else if(Part3Finished && (totalEmptyFields != 0))
+                    {
+                        currentPhase = GamePhase.Building;
                         isFirstRound = true;
                     }
                     return;
@@ -546,7 +556,10 @@ namespace Game_project_OOP
                     if(userInput != null)
                     {
                         Part3Finished = true;
-                        currentPhase = GamePhase.Crafting;
+                        if(totalEmptyFields == 0)
+                            currentPhase = GamePhase.Crafting;
+                        else
+                            currentPhase = GamePhase.Building;
                         userInput = null;
                         isFirstRound = true;
                     }
