@@ -8,6 +8,13 @@ namespace Game_project_OOP
 {
     internal class Defense : Building
     {
-        int DEFENSE_PER_BUILDING = 10;
-    }
+		private int defensePerBuilding = 20;
+
+		public int DefensePerBuilding
+		{
+			get { return defensePerBuilding; }
+			set { defensePerBuilding = value; }
+		}
+
+	}
 }

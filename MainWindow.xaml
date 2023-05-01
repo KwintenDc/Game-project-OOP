@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Game_project_OOP"
         mc:Ignorable="d"
         Title="Empire Expansion" SizeToContent="WidthAndHeight"
-        FontFamily="Verdana" FontSize="18">
+        FontFamily="Verdana" FontSize="18" ResizeMode="NoResize">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="60"></ColumnDefinition>
