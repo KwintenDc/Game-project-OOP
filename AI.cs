@@ -12,22 +12,54 @@ namespace Game_project_OOP
         {
             Random rand = new Random();
 
-            // Calculate the damage based on the strength and a random factor.
+            // Define the minimum and maximum values.
+            int maxDamage = 30;
+            int minDamage = 2;
+            int minHappinessReduction = 1;
+            int maxHappinessReduction = 2;
+            int minCitizenReduction = 1;
+            int maxCitizenReduction = 3;
+            int happinessReduction, citizenReduction;
+            int wheatReduction, breadReduction, materialsReduction;
+
+            // Generate a random amount of damage.
             int damage = strength * (rand.Next(50, 100) / 10);
+
             if (city.Defense > 0)
-                damage -= (city.Defense / 10);
+            {
+                int defenseFactor = city.Defense / 10;
+                damage -= defenseFactor;
+                if (damage < minDamage)
+                {
+                    damage = minDamage;
+                }
+            }
+
+            if (damage > maxDamage)
+            {
+                damage = maxDamage;
+            }
 
             // Reduce the city's happiness and number of citizens based on the damage.
-            city.Happiness -= damage * 2;
-            city.Health-= damage;
-            city.Citizens -= damage;
+            happinessReduction = rand.Next(minHappinessReduction, maxHappinessReduction + 1) * damage;
+            citizenReduction = rand.Next(minCitizenReduction, maxCitizenReduction + 1) * (damage/2);
+
+            city.Happiness -= happinessReduction;
+            city.Health -= damage;
+            city.Citizens -= citizenReduction;
 
             // Reduce the materials based on the damage.
-            city.RemoveResource("Wheat", damage);
-            city.RemoveResource("Bread", damage);
-            city.RemoveResource("Materials", damage);
+            wheatReduction = (rand.Next(10,150)/10)*(damage/4);
+            breadReduction = (rand.Next(10, 80) / 10) * (damage / 4);
+            materialsReduction = (rand.Next(10, 100) / 10) * (damage / 4);
 
-            return $"Citizens lost: {damage}, Happiness lost: {damage *2}, Recourses lost: {damage}";
+            city.RemoveResource("Wheat", wheatReduction);
+            city.RemoveResource("Bread", breadReduction);
+            city.RemoveResource("Materials", materialsReduction);
+
+            return $"Citizens lost: {citizenReduction}, Happiness lost: {happinessReduction}." +
+                $"\rHealth lost: {damage}, Wheat lost : {wheatReduction}" + 
+                $"\rBread lost : {breadReduction}, Materials lost : {materialsReduction}";
         }
     }
 }
