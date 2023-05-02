@@ -18,34 +18,14 @@ namespace Game_project_OOP
         public int MaxHouses { get; set; }
         public int MaxDefenses { get; set; }
 
-        private int totalMines;
-        public int TotalMines
-        {
-            get { return totalMines; }
-            set { totalMines = value; }
-        }
+        public int TotalMines { get; set; }
+        public int TotalFields { get; set; }
+        public int TotalHouses { get; set; }
+        public int TotalDefenses { get; set; }
 
-        private int totalFields;
-        public int TotalFields
-        {
-            get { return totalFields; }
-            set { totalFields = value; }
-        }
-
-        private int totalHouses;
-        public int TotalHouses
-        {
-            get { return totalHouses; }
-            set { totalHouses = value; }
-        }
-
-        private int totalDefenses;
-
-        public int TotalDefenses
-        {
-            get { return totalDefenses; }
-            set { totalDefenses = value; }
-        }
+        public int TotalUpgradedMines { get; set; }
+        public int TotalUpgradedFields { get; set; }
+        public int TotalUpgradedDefenses { get; set; }
 
         private string[] cityLayout = new string[25];
 

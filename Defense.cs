@@ -15,6 +15,13 @@ namespace Game_project_OOP
 			get { return defensePerBuilding; }
 			set { defensePerBuilding = value; }
 		}
+		private int upgradedDefensePerBuilding = 5;
+
+		public int UpgradedDefensePerBuilding
+		{
+			get { return upgradedDefensePerBuilding; }
+			set { upgradedDefensePerBuilding = value; }
+		}
 
 	}
 }

@@ -16,5 +16,13 @@ namespace Game_project_OOP
             get { return productionPerRound; }
             set { productionPerRound = value; }
         }
+
+        private int upgradedProductionsPerRound = 10;
+
+        public int UpgradedProductionsPerRound
+        {
+            get { return upgradedProductionsPerRound; }
+            set { upgradedProductionsPerRound = value; }
+        }
     }
 }

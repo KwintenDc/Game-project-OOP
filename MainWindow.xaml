@@ -23,16 +23,16 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
-            <RowDefinition Height="320"></RowDefinition>
+            <RowDefinition Height="340"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
-            <RowDefinition Height="75"></RowDefinition>
-            <RowDefinition Height="75"></RowDefinition>
+            <RowDefinition Height="65"></RowDefinition>
+            <RowDefinition Height="65"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions>
         <Label x:Name="lblTitle" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="28" Grid.ColumnSpan="10">Empire Expansion</Label>
 
         <Label x:Name="lblGameInput" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Black" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">Game text</Label>
-        <TextBox x:Name="txbxGameInput" Grid.Row="2" Margin="0,5,5,5" Padding="5" IsEnabled="False" FontFamily="Consolas"  Grid.ColumnSpan="3" TextWrapping="Wrap"></TextBox>
+        <TextBox x:Name="txbxGameInput" Grid.Row="2" Margin="0,0,5,5" Padding="5" IsEnabled="False" FontFamily="Consolas"  Grid.ColumnSpan="3" TextWrapping="Wrap"></TextBox>
 
         <Label x:Name="lblUserInput" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Black" Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="3">User input</Label>
         <TextBox x:Name="txbxUserInput" Grid.Row="4" Grid.RowSpan="2" Margin="0,5,5,5" Padding="5" FontFamily="Consolas"  Grid.ColumnSpan="3" TextWrapping="Wrap"></TextBox>
