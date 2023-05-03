@@ -8,7 +8,7 @@ namespace Game_project_OOP
 {
     internal class AI
     {
-        public static string AIAttack(City city, int strength)
+        public static string AIAttack(City city, int strength, Resource wheat, Resource materials, Resource bread)
         {
             Random rand = new Random();
 
@@ -53,9 +53,20 @@ namespace Game_project_OOP
             breadReduction = (rand.Next(10, 80) / 10) * (damage / 4);
             materialsReduction = (rand.Next(10, 100) / 10) * (damage / 4);
 
-            city.RemoveResource("Wheat", wheatReduction);
-            city.RemoveResource("Bread", breadReduction);
-            city.RemoveResource("Materials", materialsReduction);
+            if(wheatReduction < wheat.Amount)
+                city.RemoveResource("Wheat", wheatReduction);
+            else
+                city.RemoveResource("Wheat", wheat.Amount);
+
+            if (breadReduction < bread.Amount)
+                city.RemoveResource("Bread", breadReduction);
+            else
+                city.RemoveResource("Bread", bread.Amount);
+
+            if(materialsReduction< materials.Amount)
+                city.RemoveResource("Materials", materialsReduction);
+            else
+                city.RemoveResource("Materials", materials.Amount);
 
             return $"Citizens lost: {citizenReduction}, Happiness lost: {happinessReduction}." +
                 $"\rHealth lost: {damage}, Wheat lost : {wheatReduction}" + 

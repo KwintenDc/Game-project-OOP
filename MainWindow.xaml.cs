@@ -255,7 +255,7 @@ namespace Game_project_OOP
                                     if (city.MaxFields != city.TotalFields)
                                     {
                                         city.CityLayout[clickedPathNumber - 1] = "F";
-                                        city.RemoveResource("Materials", field.MaterialsRequired);
+                                        materials.Amount -= field.MaterialsRequired;
                                         city.TotalFields++;
                                         if (isFirstRound)
                                             isFirstRound = false;
@@ -283,7 +283,7 @@ namespace Game_project_OOP
                                     if (city.MaxMines != city.TotalMines)
                                     {
                                         city.CityLayout[clickedPathNumber - 1] = "M";
-                                        city.RemoveResource("Materials", field.MaterialsRequired);
+                                        materials.Amount -= field.MaterialsRequired;
                                         city.TotalMines++;
                                         if (isFirstRound)
                                             isFirstRound = false;
@@ -311,7 +311,7 @@ namespace Game_project_OOP
                                     if (city.MaxHouses != city.TotalHouses)
                                     {
                                         city.CityLayout[clickedPathNumber - 1] = "H";
-                                        city.RemoveResource("Materials", field.MaterialsRequired);
+                                        materials.Amount -= field.MaterialsRequired;
                                         city.TotalHouses++;
                                         if (isFirstRound)
                                             isFirstRound = false;
@@ -341,7 +341,7 @@ namespace Game_project_OOP
                                         if (city.MaxDefenses != city.TotalDefenses)
                                         {
                                             city.CityLayout[clickedPathNumber - 1] = "D";
-                                            city.RemoveResource("Materials", defense.MaterialsRequired);
+                                            materials.Amount -= defense.MaterialsRequired;
                                             city.TotalDefenses++;
                                             if (isFirstRound)
                                                 isFirstRound = false;
@@ -426,8 +426,8 @@ namespace Game_project_OOP
                         {
                             if (userInput != "1")
                             {
-                                city.AddResource("Bread", Convert.ToInt32(userInput));
-                                city.RemoveResource("Wheat", Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO);
+                                bread.Amount += Convert.ToInt32(userInput);
+                                wheat.Amount -= Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO;
                                 userInput = null;
                                 userChoice = 0;
                                 RoundFinished = true;
@@ -446,22 +446,6 @@ namespace Game_project_OOP
                             gameOutput = gameOutput.Replace("How much bread do you want to craft?\n\r", "");
                             gameOutput += $"You don't have enough wheat, the maximum amount of bread you can craft is {wheat.Amount / WHEAT_TO_BREAD_RATIO}," +
                                 $" please enter a valid number\r\n";
-                            if (wheat.Amount > (Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO))
-                            {
-                                city.AddResource("Bread", Convert.ToInt32(userInput));
-                                city.RemoveResource("Wheat", Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO);
-                                userInput = null;
-                                userChoice = 0;
-                                RoundFinished = true;
-                                if (game.Part == 1)
-                                    nextPhase = GamePhase.Defending;
-                                else if (game.Part == 2)
-                                    nextPhase = GamePhase.Upgrading;
-                                else if (game.Part == 3)
-                                    nextPhase = GamePhase.Trading;
-                                AddRecoursesAfterRound();
-                                return;
-                            }
                         }
                     }
                 } 
@@ -488,7 +472,7 @@ namespace Game_project_OOP
                 if(userInput != null)
                 {
                     userChoice = Convert.ToInt32(userInput);
-                    if (userChoice < (materials.Amount / mine.MaterialsRequiredToUpgrade) || UpgradeStarted)
+                    if (userChoice <= (materials.Amount / mine.MaterialsRequiredToUpgrade) || UpgradeStarted)
                     {
                         game.TotalRounds = userChoice;
                         if(game.Round != game.TotalRounds)
@@ -501,7 +485,7 @@ namespace Game_project_OOP
                                 {
                                     case "F":
                                         city.CityLayout[clickedPathNumber - 1] = "Fu";
-                                        city.RemoveResource("Materials", field.MaterialsRequiredToUpgrade);
+                                        materials.Amount -= field.MaterialsRequiredToUpgrade;
                                         city.TotalUpgradedFields++;
                                         if (isFirstRound)
                                             isFirstRound = false;
@@ -510,7 +494,7 @@ namespace Game_project_OOP
                                         break;
                                     case "M":
                                         city.CityLayout[clickedPathNumber - 1] = "Mu";
-                                        city.RemoveResource("Materials", mine.MaterialsRequiredToUpgrade);
+                                        materials.Amount -= mine.MaterialsRequiredToUpgrade;
                                         city.TotalUpgradedMines++;
                                         if (isFirstRound)
                                             isFirstRound = false;
@@ -519,7 +503,7 @@ namespace Game_project_OOP
                                         break;
                                     case "D":
                                         city.CityLayout[clickedPathNumber - 1] = "Du";
-                                        city.RemoveResource("Materials", defense.MaterialsRequiredToUpgrade);
+                                        materials.Amount -= defense.MaterialsRequiredToUpgrade;
                                         city.TotalUpgradedDefenses++;
                                         if (isFirstRound)
                                             isFirstRound = false;
@@ -542,6 +526,7 @@ namespace Game_project_OOP
                             isFirstRound = true;
                             clickedPathNumber = 0;
                             RoundFinished = true;
+                            game.TotalRounds = 1;
                             AddRecoursesAfterRound();
                             return;
                         }
@@ -568,21 +553,21 @@ namespace Game_project_OOP
                     {
                         gameOutput += "A village is attacking you! It's a pretty small village so they don't do much damage.\n\r" +
                             "The mayor retreats his troops as you are still much to strong for his village.\n\r";
-                        gameOutput += AI.AIAttack(city, 1);
+                        gameOutput += AI.AIAttack(city, 1, wheat, materials, bread);
                         gameOutput += "\r\n\n1. Go to next phase";
                     }
                     if (6 < randNum && randNum <= 9)
                     {
                         gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
                             "The mayor calls his troops back a minor loss for your village..\n\r";
-                        gameOutput += AI.AIAttack(city, 2);
+                        gameOutput += AI.AIAttack(city, 2, wheat, materials, bread);
                         gameOutput += "\r\n\n1. Go to next phase";
                     }
                     if (10 <= randNum)
                     {
                         gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
                                 "The mayor calls his troops back a great loss for your village.\n\r";
-                        gameOutput += AI.AIAttack(city, 3);
+                        gameOutput += AI.AIAttack(city, 3, wheat, materials, bread);
                         gameOutput += "\r\n\n1. Go to next phase";
                     }
                     isFirstRound= false;
@@ -700,18 +685,21 @@ namespace Game_project_OOP
                 switch (userInput)
                 {
                     case "1":
-                        city.AddResource("Materials", (mine.ProductionsPerRound * city.TotalMines) + (mine.UpgradedProductionsPerRound * city.TotalUpgradedMines));
-                        city.AddResource("Wheat", (field.ProductionsPerRound * city.TotalFields) + (field.UpgradedProductionsPerRound * city.TotalUpgradedFields));
-                        city.Citizens += (bread.Amount - (bread.Amount % 4)) / 4;
-                        bread.Amount -= (bread.Amount - (bread.Amount % 4));
+                        materials.Amount += (mine.ProductionsPerRound * city.TotalMines) + (mine.UpgradedProductionsPerRound * city.TotalUpgradedMines);
+                        wheat.Amount += (field.ProductionsPerRound * city.TotalFields) + (field.UpgradedProductionsPerRound * city.TotalUpgradedFields);
+                        if (bread.Amount > 4)
+                        {
+                            city.Citizens += (bread.Amount - (bread.Amount % 4)) / 4;
+                            bread.Amount -= (bread.Amount - (bread.Amount % 4));
+                        }
                         currentPhase = nextPhase;
                         RoundFinished = false;
                         game.Round = 1;
                         userInput = null;
                         break;
                     case "2":
-                        city.AddResource("Materials", (mine.ProductionsPerRound * city.TotalMines) + (mine.UpgradedProductionsPerRound * city.TotalUpgradedMines));
-                        city.AddResource("Wheat", (field.ProductionsPerRound * city.TotalFields) + (field.UpgradedProductionsPerRound * city.TotalUpgradedFields));
+                        materials.Amount += (mine.ProductionsPerRound * city.TotalMines) + (mine.UpgradedProductionsPerRound * city.TotalUpgradedMines);
+                        wheat.Amount += (field.ProductionsPerRound * city.TotalFields) + (field.UpgradedProductionsPerRound * city.TotalUpgradedFields);
                         currentPhase = nextPhase;
                         RoundFinished = false;
                         game.Round = 1;
