@@ -28,10 +28,10 @@ namespace Game_project_OOP
         int maxWheat, maxBread, maxMaterials, MAX_CITIZENS_START, MAX_HEALTH, MAX_DEFENSE, MAX_HAPPINESS;
         Resource? bread, wheat, materials;
         string gameOutput, userInput; 
-        int userChoice;
+        int userChoice, randNum, tradeResult ,totalEmptyFields = 20;
         int WHEAT_TO_BREAD_RATIO = 3;
-        Random random = new Random();
-        int randNum, totalEmptyFields = 20;
+        Random random = new Random(); 
+        string[] userChoices = new string[3];
 
         public string TltpCitizens { get; set; }
         public string TltpHappiness { get; set; }
@@ -469,6 +469,18 @@ namespace Game_project_OOP
                 {
                     gameOutput += $" (Max : {userChoice})\r\n";
                 }
+                if((materials.Amount / mine.MaterialsRequiredToUpgrade) <= 0 || (city.TotalDefenses + city.TotalMines + city.TotalFields - city.TotalUpgradedDefenses - city.TotalUpgradedFields - city.TotalUpgradedMines) <= 0)
+                {
+                    UpgradeStarted = false;
+                    userChoice = 0;
+                    userInput = null;
+                    nextPhase = GamePhase.Defending;
+                    isFirstRound = true;
+                    clickedPathNumber = 0;
+                    RoundFinished = true;
+                    game.TotalRounds = 1;
+                    AddRecoursesAfterRound();
+                }
                 if(userInput != null)
                 {
                     userChoice = Convert.ToInt32(userInput);
@@ -553,21 +565,21 @@ namespace Game_project_OOP
                     {
                         gameOutput += "A village is attacking you! It's a pretty small village so they don't do much damage.\n\r" +
                             "The mayor retreats his troops as you are still much to strong for his village.\n\r";
-                        gameOutput += AI.AIAttack(city, 1, wheat, materials, bread);
+                        gameOutput += AI.Attack(city, 1, wheat, materials, bread);
                         gameOutput += "\r\n\n1. Go to next phase";
                     }
                     if (6 < randNum && randNum <= 9)
                     {
                         gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
                             "The mayor calls his troops back a minor loss for your village..\n\r";
-                        gameOutput += AI.AIAttack(city, 2, wheat, materials, bread);
+                        gameOutput += AI.Attack(city, 2, wheat, materials, bread);
                         gameOutput += "\r\n\n1. Go to next phase";
                     }
                     if (10 <= randNum)
                     {
                         gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
                                 "The mayor calls his troops back a great loss for your village.\n\r";
-                        gameOutput += AI.AIAttack(city, 3, wheat, materials, bread);
+                        gameOutput += AI.Attack(city, 3, wheat, materials, bread);
                         gameOutput += "\r\n\n1. Go to next phase";
                     }
                     isFirstRound= false;
@@ -595,12 +607,149 @@ namespace Game_project_OOP
             // Code for trading phase.
             if (currentPhase == GamePhase.Trading)
             {
-                gameOutput = "<<< Trading phase >>>";
+                gameOutput = "<<< Trading phase >>>\n\r";
+                gameOutput += "Do you want to trade with a friendly village?\n\r";
+                gameOutput += "1. Yes \r2. No\n\r";
                 if (userInput != null)
                 {
-                    nextPhase = GamePhase.Upgrading;
-                    userInput = null;
-                    RoundFinished = true;
+                    if (userChoice == 0)
+                    {
+                        switch (userInput)
+                        {
+                            case "1":
+                                userInput = null;
+                                userChoice = 1;
+                                break;
+                            case "2":
+                                nextPhase = GamePhase.Upgrading;
+                                userInput = null;
+                                RoundFinished = true;
+                                AddRecoursesAfterRound();
+                                return;
+                            default:
+                                gameOutput += "Pick a valid option (1 , 2)";
+                                break;
+                        }
+                    }
+                }
+                if (userChoice == 1)
+                {
+                    gameOutput = "<<< Trading phase >>>\n\r";
+                    gameOutput += "What resource do you want to trade?\n\r";
+                    gameOutput += "1. Materials \r2. Wheat \r3. Bread\r\n";
+                    if (userInput != null)
+                    {
+                        switch (userInput)
+                        {
+                            case "1":
+                                userChoice = 2;
+                                userChoices[0] = "Materials";
+                                userInput = null;
+                                break;
+                            case "2":
+                                userChoice = 2;
+                                userChoices[0] = "Wheat";
+                                userInput = null;
+                                break;
+                            case "3":
+                                userChoice = 2;
+                                userChoices[0] = "Bread";
+                                userInput = null;
+                                break;
+                            default:
+                                gameOutput += "Pick a valid option (1 , 2 , 3)";
+                                break;
+                        }
+                    }
+                }
+                if(userChoice == 2)
+                {
+                    gameOutput = "<<< Trading phase >>>\n\r";
+                    gameOutput += $"How much {userChoices[0]} do you want to give?\n\r";
+                    if(userInput != null)
+                    {
+                        userChoices[1] = userInput;
+                        userChoice = 3;
+                        userInput = null;
+                    } 
+                }
+                if(userChoice == 3)
+                {
+                    gameOutput = "<<< Trading phase >>>\n\r";
+                    gameOutput += "What resource do you want to receive?\n\r";
+                    gameOutput += "1. Materials \r2. Wheat \r3. Bread\r\n";
+                    if (userInput != null)
+                    {
+                        switch (userInput)
+                        {
+                            case "1":
+                                userChoice = 4;
+                                userChoices[2] = "Materials";
+                                userInput = null;
+                                break;
+                            case "2":
+                                userChoice = 4;
+                                userChoices[2] = "Wheat";
+                                userInput = null;
+                                break;
+                            case "3":
+                                userChoice = 4;
+                                userChoices[2] = "Bread";
+                                userInput = null;
+                                break;
+                            default:
+                                gameOutput += "Pick a valid option (1 , 2 , 3)";
+                                break;
+                        }
+                    }
+                }
+                if(userChoice == 4)
+                {
+                    gameOutput = "<<< Trading phase >>>\n\r";
+                    tradeResult = Convert.ToInt32(AI.Trade(userChoices));
+                    gameOutput += $"The village accepted the {userChoices[1]} {userChoices[0]} and gave you {tradeResult} {userChoices[2]} in return.\n\r";
+                    gameOutput += "1. Go to next phase";
+                    switch (userChoices[0])
+                    {
+                        case "Materials":
+                            materials.Amount -= Convert.ToInt32(userChoices[1]);
+                            break;
+                        case "Wheat":
+                            wheat.Amount -= Convert.ToInt32(userChoices[1]);
+                            break;
+                        case "Bread":
+                            bread.Amount -= Convert.ToInt32(userChoices[1]);
+                            break;
+                    }
+                    switch(userChoices[2])
+                    {
+                        case "Materials":
+                            materials.Amount += tradeResult;
+                            userChoice = 5;
+                            break;
+                        case "Wheat":
+                            wheat.Amount += tradeResult;
+                            userChoice = 5;
+                            break;
+                        case "Bread":
+                            bread.Amount += tradeResult;
+                            userChoice = 5;
+                            break;
+                    }
+                }
+                if (userChoice == 5)
+                {
+                    gameOutput = "<<< Trading phase >>>\n\r";
+                    gameOutput += $"The village accepted the {userChoices[1]} {userChoices[0]} and gave you {tradeResult} {userChoices[2]} in return.\n\r";
+                    gameOutput += "1. Go to next phase";
+                    if (userInput != null)
+                    {
+                        nextPhase = GamePhase.Upgrading;
+                        userInput = null;
+                        RoundFinished = true;
+                        userChoice = 0;
+                        AddRecoursesAfterRound();
+                    }
                 }
             }
         }

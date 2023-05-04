@@ -8,7 +8,7 @@ namespace Game_project_OOP
 {
     internal class AI
     {
-        public static string AIAttack(City city, int strength, Resource wheat, Resource materials, Resource bread)
+        public static string Attack(City city, int strength, Resource wheat, Resource materials, Resource bread)
         {
             Random rand = new Random();
 
@@ -71,6 +71,12 @@ namespace Game_project_OOP
             return $"Citizens lost: {citizenReduction}, Happiness lost: {happinessReduction}." +
                 $"\rHealth lost: {damage}, Wheat lost : {wheatReduction}" + 
                 $"\rBread lost : {breadReduction}, Materials lost : {materialsReduction}";
+        }
+        public static string Trade(string[] userChoices)
+        {
+            Random rand = new Random();
+            int amount = Convert.ToInt32(userChoices[1]);
+            return $"{Convert.ToString(rand.Next(amount / 2, amount))}";
         }
     }
 }
