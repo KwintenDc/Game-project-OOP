@@ -27,9 +27,9 @@ namespace Game_project_OOP
         Defense defense= new Defense();
         int maxWheat, maxBread, maxMaterials, MAX_CITIZENS_START, MAX_HEALTH, MAX_DEFENSE, MAX_HAPPINESS;
         Resource? bread, wheat, materials;
-        string gameOutput, userInput; 
+        string gameOutput, userInput, gamemodeChoice; 
         int userChoice, randNum, tradeResult ,totalEmptyFields = 20;
-        int WHEAT_TO_BREAD_RATIO = 3;
+        int WHEAT_TO_BREAD_RATIO = 3, roundsToWin;
         Random random = new Random(); 
         string[] userChoices = new string[3];
 
@@ -182,8 +182,22 @@ namespace Game_project_OOP
         }
         public void GameMain()
         {
-            if (currentPhase != GamePhase.GameOver)
+            if ((currentPhase != GamePhase.GameOver) && (currentPhase != GamePhase.GameWin))
             {
+                if(gamemodeChoice == "maxCitizens")
+                {
+                    if((city.Citizens == MAX_CITIZENS_START + (house.HousingSpace * city.TotalHouses)) && (city.Happiness == MAX_HAPPINESS))
+                    {
+                        currentPhase = GamePhase.GameWin;
+                    }
+                }
+                if(gamemodeChoice == "20Rounds")
+                {
+                    if(roundsToWin == 20)
+                    {
+                        currentPhase = GamePhase.GameWin;
+                    }
+                }
                 switch (game.Part)
                 {
                     case 1:
@@ -218,6 +232,14 @@ namespace Game_project_OOP
                 UpdateGameText(gameOutput);
                 DrawGameBoard();
                 UpdateUI();
+            }
+            else if(currentPhase == GamePhase.GameWin)
+            {
+                // TODO
+            }
+            else
+            {
+                // TODO
             }
         }
 
@@ -596,6 +618,8 @@ namespace Game_project_OOP
                 {
                     currentPhase = GamePhase.Transition;
                     userInput = null;
+                    if (Part3Finished)
+                        roundsToWin++;
                     if (Part3Finished && (totalEmptyFields <= 0))
                     {
                         currentPhase = GamePhase.Crafting;
@@ -804,10 +828,27 @@ namespace Game_project_OOP
                 else
                 {
                     gameOutput = $"<<< PART {game.Part} >>>\n\r";
-                    gameOutput += "You have completed all parts of Empire Expansion, you can choose to save and exit or keep playing to reach a goal you set for yourself.\r\n\n";
-                    gameOutput += "1. Go to next phase.";
+                    gameOutput += "You have completed all parts of Empire Expansion, you can choose to save and exit or keep playing to reach a goal of your choosing.\r\n\n";
+                    gameOutput += "What do you want your goal to be?\n\r";
+                    gameOutput += "1. Reach maximum citizens and happiness \r2. Survive 20 more rounds \r3. Just keep playing";
                     if(userInput != null)
                     {
+                        switch (userInput)
+                        {
+                            case "1":
+                                gamemodeChoice = "maxCitizens";
+                                break;
+                            case "2":
+                                gamemodeChoice = "20Rounds";
+                                roundsToWin = 0;
+                                break;
+                            case "3":
+                                // No extra variable required.
+                                break;
+                            default:
+                                gameOutput += "Pick a valid option (1 , 2 , 3)";
+                                break;
+                        }
                         Part3Finished = true;
                         if(totalEmptyFields == 0)
                             currentPhase = GamePhase.Crafting;

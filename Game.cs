@@ -29,6 +29,7 @@ namespace Game_project_OOP
        Upgrading,
        Transition,
        Wait,
+       GameWin,
        GameOver
     }
 }
