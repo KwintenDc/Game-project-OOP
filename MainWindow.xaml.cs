@@ -796,7 +796,7 @@ namespace Game_project_OOP
                 else
                 {
                     gameOutput = $"<<< PART {game.Part} >>>\n\r";
-                    gameOutput += "You have completed all parts of Empire Expansion, you can choose to save and exit or keep playing to reach a goal you set for yourself.";
+                    gameOutput += "You have completed all parts of Empire Expansion, you can choose to save and exit or keep playing to reach a goal you set for yourself.\r\n";
                     gameOutput += "1. Go to next phase.";
                     if(userInput != null)
                     {
