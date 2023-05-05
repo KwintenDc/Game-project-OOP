@@ -76,6 +76,7 @@ namespace Game_project_OOP
             path25.MouseLeftButtonDown += Paths_MouseLeftButtonDown;
 
             btnSubmit.Click += BtnSubmit_Click;
+            btnSaveandExit.Click += BtnSaveandExit_Click;
             txbxUserInput.KeyDown += txBxUserInput_KeyDown;
 
             Init_Game();
@@ -90,6 +91,11 @@ namespace Game_project_OOP
             GameMain();
             GameMain();
             GameMain();
+
+        }
+
+        private void BtnSaveandExit_Click(object sender, RoutedEventArgs e)
+        {
 
         }
         private void txBxUserInput_KeyDown(object sender, KeyEventArgs e)
@@ -194,7 +200,7 @@ namespace Game_project_OOP
                         TransitionPhase();
                         break;
                     case 3:
-                        if(!Part3Finished || (totalEmptyFields != 0))
+                        if(totalEmptyFields > 0)
                             BuildingPhase();
                         CraftingPhase();
                         TradingPhase();
@@ -394,12 +400,14 @@ namespace Game_project_OOP
                 gameOutput = "<<< CRAFTING PHASE >>>\n\r";
                 gameOutput += "Do you want to craft bread from wheat? (3 -> 1)\n\r";
                 gameOutput += "1. Yes \r2. No\n\r";
-                if (userInput != null)
+                if (userInput != null && userChoice != 1)
                 {
+
                     switch (userInput)
                     {
                         case "1":
                             userChoice = 1;
+                            userInput = null;
                             break;
                         case "2":
                             if (game.Part == 1)
@@ -417,29 +425,29 @@ namespace Game_project_OOP
                             break;
 
                     }
-                    if (userChoice == 1)
-                    {
-                        gameOutput = "<<< CRAFTING PHASE >>>\n\r";
-                        gameOutput += "How much bread do you want to craft?\n\r";
+                }
+                if (userChoice == 1)
+                {
+                    gameOutput = "<<< CRAFTING PHASE >>>\n\r";
+                    gameOutput += $"How much bread do you want to craft? (Max : {wheat.Amount/WHEAT_TO_BREAD_RATIO})\n\r";
 
+                    if (userInput != null)
+                    {
                         if (wheat.Amount >= (Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO))
                         {
-                            if (userInput != "1")
-                            {
-                                bread.Amount += Convert.ToInt32(userInput);
-                                wheat.Amount -= Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO;
-                                userInput = null;
-                                userChoice = 0;
-                                RoundFinished = true;
-                                if (game.Part == 1)
-                                    nextPhase = GamePhase.Defending;
-                                else if (game.Part == 2)
-                                    nextPhase = GamePhase.Upgrading;
-                                else if (game.Part == 3)
-                                    nextPhase = GamePhase.Trading;
-                                AddRecoursesAfterRound();
-                                return;
-                            }
+                            bread.Amount += Convert.ToInt32(userInput);
+                            wheat.Amount -= Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO;
+                            userInput = null;
+                            userChoice = 0;
+                            RoundFinished = true;
+                            if (game.Part == 1)
+                                nextPhase = GamePhase.Defending;
+                            else if (game.Part == 2)
+                                nextPhase = GamePhase.Upgrading;
+                            else if (game.Part == 3)
+                                nextPhase = GamePhase.Trading;
+                            AddRecoursesAfterRound();
+                            return;
                         }
                         else
                         {
@@ -448,7 +456,7 @@ namespace Game_project_OOP
                                 $" please enter a valid number\r\n";
                         }
                     }
-                } 
+                }  
             }
         }
         private void UpgradingPhase() 
@@ -588,12 +596,12 @@ namespace Game_project_OOP
                 {
                     currentPhase = GamePhase.Transition;
                     userInput = null;
-                    if (Part3Finished && (totalEmptyFields == 0))
+                    if (Part3Finished && (totalEmptyFields <= 0))
                     {
                         currentPhase = GamePhase.Crafting;
                         isFirstRound = true;
                     }
-                    else if(Part3Finished && (totalEmptyFields != 0))
+                    else if(Part3Finished && (totalEmptyFields > 0))
                     {
                         currentPhase = GamePhase.Building;
                         isFirstRound = true;
@@ -774,7 +782,7 @@ namespace Game_project_OOP
                     gameOutput += "1. Go to next Part";
                     if (userInput != null)
                     {
-                        if (game.Part != 3)
+                        if (game.Part < 3)
                             game.Part++;
                         currentPhase = GamePhase.Building;
                         userInput = null;
@@ -796,7 +804,7 @@ namespace Game_project_OOP
                 else
                 {
                     gameOutput = $"<<< PART {game.Part} >>>\n\r";
-                    gameOutput += "You have completed all parts of Empire Expansion, you can choose to save and exit or keep playing to reach a goal you set for yourself.\r\n";
+                    gameOutput += "You have completed all parts of Empire Expansion, you can choose to save and exit or keep playing to reach a goal you set for yourself.\r\n\n";
                     gameOutput += "1. Go to next phase.";
                     if(userInput != null)
                     {
@@ -839,6 +847,7 @@ namespace Game_project_OOP
                         if (bread.Amount > 4)
                         {
                             city.Citizens += (bread.Amount - (bread.Amount % 4)) / 4;
+                            city.Happiness += ((bread.Amount - (bread.Amount % 4)) / 4) / (random.Next(10,100) / 10);
                             bread.Amount -= (bread.Amount - (bread.Amount % 4));
                         }
                         currentPhase = nextPhase;
