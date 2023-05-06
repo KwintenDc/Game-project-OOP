@@ -15,7 +15,9 @@ using System.Xml;
 using System.IO;
 using Path = System.Windows.Shapes.Path;
 using System.Text.Json;
-//using Newtonsoft.Json;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Game_project_OOP
 {
@@ -27,7 +29,7 @@ namespace Game_project_OOP
         Path clickedPath;
         int clickedPathNumber;
         GamePhase currentPhase, nextPhase;
-        bool isFirstRound = true;
+        bool isFirstRound = true, newGame = true;
         bool RoundFinished, Part3Finished, UpgradeStarted;
         Game game = new Game();
         City city = new City();
@@ -35,12 +37,15 @@ namespace Game_project_OOP
         Field field = new Field();
         House house = new House();
         Defense defense = new Defense();
-        int maxWheat, maxBread, maxMaterials, MAX_CITIZENS_START, MAX_HEALTH, MAX_DEFENSE, MAX_HAPPINESS;
+        int MAX_WHEAT, MAX_BREAD, MAX_MATERIALS, MAX_CITIZENS_START, MAX_HEALTH, MAX_DEFENSE, MAX_HAPPINESS;
         Resource? bread, wheat, materials;
         string gameOutput, userInput, gamemodeChoice;
         int userChoice, randNum, tradeResult, totalEmptyFields = 20;
         int WHEAT_TO_BREAD_RATIO = 3, roundsToWin;
         Random random = new Random();
+
+        string fileName = "C:\\Users\\decle\\source\\repos\\Game project OOP\\data.json";
+
         string[] userChoices = new string[3];
         public string TltpCitizens { get; set; }
         public string TltpHappiness { get; set; }
@@ -50,9 +55,19 @@ namespace Game_project_OOP
         public string TltpWheat { get; set; }
         public string TltpBread { get; set; }
 
-        public GameWindow()
+        public GameWindow(string gameName = "0")
         {
             InitializeComponent();
+            game.SaveGame = gameName;
+
+            string jsonString = File.ReadAllText(fileName);
+
+            // Deserialize the JSON data into a dictionary
+            var gameData = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonString);
+
+            // Check if the game name exists in the dictionary
+            if(gameData != null )
+                newGame = !gameData.ContainsKey(game.SaveGame);
 
             TltpCitizens = "This is a tooltip test.";
             // Set the DataContext of the window to this instance
@@ -105,27 +120,47 @@ namespace Game_project_OOP
 
         private void BtnSaveandExit_Click(object sender, RoutedEventArgs e)
         {
-            game.SaveGame = "TestGame";
+            // Read existing JSON data from the file
+            string existingJson = File.ReadAllText(fileName);
 
-            var data = new Dictionary<string, string>
+            // Deserialize the JSON data into a dictionary
+            var existingData = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(existingJson);
+
+            // Create or update the data for the current game
+            var newData = new Dictionary<string, string>
+                {
+                    { "Citizens", Convert.ToString(city.Citizens) },
+                    { "Happiness", Convert.ToString(city.Happiness) },
+                    { "Health", Convert.ToString(city.Health) },
+                    { "Defense", Convert.ToString(city.Defense) },
+                    { "Materials", Convert.ToString(materials.Amount) },
+                    { "Wheat", Convert.ToString(wheat.Amount) },
+                    { "Bread", Convert.ToString(bread.Amount) },
+                    { "CityLayout", JsonConvert.SerializeObject(city.CityLayout) },
+                    { "GamePart", Convert.ToString(game.Part)},
+                    { "GameRound", Convert.ToString(game.Round)},
+                    { "GameTotalRound", Convert.ToString(game.TotalRounds)},
+                    { "CurrentPhase", Convert.ToString(currentPhase)},
+                    { "NextPhase", Convert.ToString(nextPhase)},
+                };
+            string updatedJson;
+            // Add or update the game data in the existing data dictionary
+            if (existingData != null)
             {
-                { "Citizens", Convert.ToString(city.Citizens) },
-                { "Happiness", Convert.ToString(city.Happiness) },
-                { "Health", Convert.ToString(city.Health) },
-                { "Defense", Convert.ToString(city.Defense) },
-                { "Materials", Convert.ToString(materials.Amount) },
-                { "Wheat", Convert.ToString(wheat.Amount) },
-                { "Bread", Convert.ToString(bread.Amount) },
-                { "CityLayout", Convert.ToString(city.CityLayout)},
-            };
+                existingData[game.SaveGame] = newData;
 
-            var gameData = new Dictionary<string, Dictionary<string, string>>
+                // Serialize the updated data back to JSON
+                updatedJson = JsonConvert.SerializeObject(existingData, Formatting.Indented);
+            }
+            else
             {
-                { game.SaveGame, data }
-            };
+                var newDict = new Dictionary<string, Dictionary<string, string>>();
+                newDict[game.SaveGame] = newData;
+                updatedJson = JsonConvert.SerializeObject(newDict, Formatting.Indented);
+            }
 
-            string jsonString = JsonSerializer.Serialize(gameData);
-            File.WriteAllText("C:\\Users\\decle\\source\\repos\\Game project OOP\\data.json", jsonString);
+            // Write the JSON string to the file
+            File.WriteAllText(fileName, updatedJson);
 
             Close();
         }
@@ -153,27 +188,6 @@ namespace Game_project_OOP
 
         public void Init_Game()
         {
-            // Setting max values.
-            MAX_HAPPINESS = 100;
-            MAX_HEALTH = 100;
-            MAX_DEFENSE = 100;
-            MAX_CITIZENS_START = 100;
-
-            maxMaterials = 200;
-            maxWheat = 200;
-            maxBread = 200;
-
-            city.MaxFields = 4;
-            city.MaxMines = 4;
-            city.MaxHouses = 4;
-            city.MaxDefenses = 0;
-
-            // Settings starting stats.
-            city.Citizens = 50;
-            city.Happiness = 100;
-            city.Health = 100;
-            city.Defense = 0;
-
             // Setting starting resources.
             city.AddResource("Bread", 10);
             bread = city.Resources.FirstOrDefault(r => r.Name == "Bread");
@@ -184,33 +198,139 @@ namespace Game_project_OOP
             city.AddResource("Materials", 100);
             materials = city.Resources.FirstOrDefault(r => r.Name == "Materials");
 
-            // Setting Citylayout.
-            string[] layout = new string[]
+            // Setting max values.
+            MAX_HAPPINESS = 100;
+            MAX_HEALTH = 100;
+            MAX_DEFENSE = 100;
+            MAX_CITIZENS_START = 100;
+
+            MAX_MATERIALS = 200;
+            MAX_WHEAT = 200;
+            MAX_BREAD = 200;
+
+            if (newGame)
+            {
+                city.MaxFields = 4;
+                city.MaxMines = 4;
+                city.MaxHouses = 4;
+                city.MaxDefenses = 0;
+
+                // Settings starting stats.
+                city.Citizens = 50;
+                city.Happiness = 100;
+                city.Health = 100;
+                city.Defense = 0;
+
+                // Setting Citylayout.
+                string[] layout = new string[]
                                 {"0", "0", "0", "0", "0",
                                  "0", "F", "E", "M", "0",
                                  "0", "E", "T", "E", "0",
                                  "0", "M", "E", "F", "0",
                                  "0", "0", "0", "0", "0"};
-            city.CityLayout = layout;
+                city.CityLayout = layout;
 
-            // Drawing city layout.
-            DrawGameBoard();
+                // Drawing city layout.
+                DrawGameBoard();
 
-            // Set GamePart to 1.
-            game.Part = 1;
+                // Set GamePart to 1.
+                game.Part = 1;
 
-            // Set GamePhase to started.
-            currentPhase = GamePhase.Building;
+                // Set GamePhase to started.
+                currentPhase = GamePhase.Building;
 
-            // Set Total Rounds and Current Round.
-            game.TotalRounds = 4;
-            game.Round = 1;
+                // Set Total Rounds and Current Round.
+                game.TotalRounds = 4;
+                game.Round = 1;
 
-            // Update the progressbars.
-            UpdateUI();
+                // Update the progressbars.
+                UpdateUI();
 
-            // Start the Game.
-            GameMain();
+                // Start the Game.
+                GameMain();
+            }
+            else
+            {
+                string jsonString = File.ReadAllText(fileName);
+
+                // Deserialize the JSON data into a dictionary
+                var gameData = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonString);
+
+                if (gameData.TryGetValue(game.SaveGame, out var data))
+                {
+                    // Retrieve the values from the dictionary and store them in variables
+                    if (data.TryGetValue("Citizens", out var citizensValue))
+                    {
+                        city.Citizens = Convert.ToInt32(citizensValue);
+                    }
+
+                    if (data.TryGetValue("Happiness", out var happinessValue))
+                    {
+                        city.Happiness = Convert.ToInt32(happinessValue);
+                    }
+
+                    if (data.TryGetValue("Health", out var healthValue))
+                    {
+                        city.Health = Convert.ToInt32(healthValue);
+                    }
+
+                    if (data.TryGetValue("Defense", out var defenseValue))
+                    {
+                        city.Defense = Convert.ToInt32(defenseValue);
+                    }
+
+                    if (data.TryGetValue("Materials", out var materialsValue))
+                    {
+                        materials.Amount = Convert.ToInt32(materialsValue);
+                    }
+
+                    if (data.TryGetValue("Wheat", out var wheatValue))
+                    {
+                        wheat.Amount = Convert.ToInt32(wheatValue);
+                    }
+
+                    if (data.TryGetValue("Bread", out var breadValue))
+                    {
+                        bread.Amount = Convert.ToInt32(breadValue);
+                    }
+
+                    if (data.TryGetValue("CityLayout", out var cityLayoutValue))
+                    {
+                        city.CityLayout = JsonConvert.DeserializeObject<string[]>(cityLayoutValue);
+                    }
+
+                    if (data.TryGetValue("GamePart", out var gamePartValue))
+                    {
+                        game.Part = Convert.ToInt32(gamePartValue);
+                    }
+
+                    if (data.TryGetValue("GameRound", out var gameRoundValue))
+                    {
+                        game.Round = Convert.ToInt32(gameRoundValue);
+                    }
+
+                    if (data.TryGetValue("GameTotalRound", out var gameTotalRoundValue))
+                    {
+                        game.TotalRounds = Convert.ToInt32(gameTotalRoundValue);
+                    }
+
+                    if (data.TryGetValue("CurrentPhase", out var currentPhaseValue))
+                    {
+                        Enum.TryParse<GamePhase>(currentPhaseValue, out var currentPhase);
+                    }
+
+                    if (data.TryGetValue("NextPhase", out var nextPhaseValue))
+                    {
+                        Enum.TryParse<GamePhase>(nextPhaseValue, out var nextPhase);
+                    }
+
+                    // Update the progressbars.
+                    UpdateUI();
+
+                    // Start the Game.
+                    GameMain();
+                }
+            }
         }
         public void GameMain()
         {
@@ -971,18 +1091,18 @@ namespace Game_project_OOP
 
             if (materials.Amount < 0)
                 materials.Amount = 0;
-            else if (materials.Amount > maxMaterials)
-                materials.Amount = maxMaterials;
+            else if (materials.Amount > MAX_MATERIALS)
+                materials.Amount = MAX_MATERIALS;
 
             if (wheat.Amount < 0)
                 wheat.Amount = 0;
-            else if (wheat.Amount > maxWheat)
-                wheat.Amount = maxWheat;
+            else if (wheat.Amount > MAX_WHEAT)
+                wheat.Amount = MAX_WHEAT;
 
             if (bread.Amount < 0)
                 bread.Amount = 0;
-            else if (bread.Amount > maxBread)
-                bread.Amount = maxBread;
+            else if (bread.Amount > MAX_BREAD)
+                bread.Amount = MAX_BREAD;
 
             // Update the progressbar values.
             prgBr1.Value = city.Citizens;
@@ -1003,9 +1123,9 @@ namespace Game_project_OOP
             prgBr2.Maximum = MAX_HAPPINESS;
             prgBr3.Maximum = MAX_HEALTH;
             prgBr4.Maximum = MAX_DEFENSE;
-            prgBr5.Maximum = maxMaterials;
-            prgBr6.Maximum = maxWheat;
-            prgBr7.Maximum = maxBread;
+            prgBr5.Maximum = MAX_MATERIALS;
+            prgBr6.Maximum = MAX_WHEAT;
+            prgBr7.Maximum = MAX_BREAD;
             prgBr1.Maximum = MAX_CITIZENS_START + (house.HousingSpace * city.TotalHouses);
 
             // Update the label to display the current round.
@@ -1016,9 +1136,9 @@ namespace Game_project_OOP
             TltpHappiness = $"Max : {MAX_HAPPINESS}";
             TltpHealth = $"Max : {MAX_HEALTH}";
             TltpDefense = $"Max : {MAX_DEFENSE}";
-            TltpMaterials = $"Max : {maxMaterials}";
-            TltpWheat = $"Max : {maxWheat}";
-            TltpBread = $"Max : {maxBread}";
+            TltpMaterials = $"Max : {MAX_MATERIALS}";
+            TltpWheat = $"Max : {MAX_WHEAT}";
+            TltpBread = $"Max : {MAX_BREAD}";
 
             // Change colors of progressbars based on it's value.
             for (int i = 0; i < 7; i++)

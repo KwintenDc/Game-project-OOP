@@ -1,1 +1,32 @@
-{"TestGame":{"Citizens":"50","Happiness":"100","Health":"100","Defense":"0","Materials":"100","Wheat":"100","Bread":"10","CityLayout":"System.String[]"}}
+{
+  "TEST": {
+    "Citizens": "59",
+    "Happiness": "90",
+    "Health": "90",
+    "Defense": "0",
+    "Materials": "162",
+    "Wheat": "14",
+    "Bread": "0",
+    "CityLayout": "[\"E\",\"E\",\"E\",\"E\",\"E\",\"E\",\"F\",\"M\",\"M\",\"E\",\"E\",\"F\",\"T\",\"M\",\"E\",\"E\",\"M\",\"F\",\"F\",\"E\",\"E\",\"E\",\"E\",\"E\",\"E\"]",
+    "GamePart": "2",
+    "GameRound": "1",
+    "GameTotalRound": "7",
+    "CurrentPhase": "Building",
+    "NextPhase": "Building"
+  },
+  "TEST2": {
+    "Citizens": "50",
+    "Happiness": "100",
+    "Health": "100",
+    "Defense": "0",
+    "Materials": "60",
+    "Wheat": "0",
+    "Bread": "50",
+    "CityLayout": "[\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"F\",\"H\",\"M\",\"0\",\"0\",\"H\",\"T\",\"H\",\"0\",\"0\",\"M\",\"H\",\"F\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\"]",
+    "GamePart": "1",
+    "GameRound": "1",
+    "GameTotalRound": "1",
+    "CurrentPhase": "Wait",
+    "NextPhase": "Defending"
+  }
+}
