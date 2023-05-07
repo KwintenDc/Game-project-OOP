@@ -41,16 +41,21 @@ namespace Game_project_OOP
 
         private void LstbxLoadedGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            gameName = (string)lstbxLoadedGames.SelectedItem;
-            gameWindow = new GameWindow(gameName);
-
+            if (lstbxLoadedGames.SelectedItem != null)
+            {
+                gameName = (string)lstbxLoadedGames.SelectedItem;
+                gameWindow = new GameWindow(gameName);
+            }
             gameWindow.Closed += GameWindow_Closed;
 
             gameWindow.Show();
-
+            
             lstbxLoadedGames.Visibility = Visibility.Hidden;
             gameWindowShown = true;
             Hide();
+
+            // Clear the selected item to prevent it from being remembered.
+            lstbxLoadedGames.SelectedItem = null;
         }
 
         private void TxbxGameName_KeyDown(object sender, KeyEventArgs e)
@@ -58,15 +63,38 @@ namespace Game_project_OOP
             if (e.Key == Key.Enter)
             {
                 gameName = txbxGameName.Text;
-                gameWindow = new GameWindow(gameName);
 
-                gameWindow.Closed += GameWindow_Closed; 
+                if (!string.IsNullOrWhiteSpace(gameName))
+                {
+                    // Read the JSON file into a string
+                    string jsonString = File.ReadAllText(fileName);
 
-                gameWindow.Show();
+                    // Parse the JSON string into a dictionary
+                    var data = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(jsonString);
 
-                stackPanelNewName.Visibility = Visibility.Hidden;
-                gameWindowShown = true;
-                Hide();
+                    if (data != null)
+                    {
+                        // Retrieve all the keys (headers)
+                        IEnumerable<string> headers = data.Keys;
+                        if (!headers.Contains(gameName))
+                        {
+                            gameWindow = new GameWindow(gameName);
+
+                            gameWindow.Closed += GameWindow_Closed;
+
+                            gameWindow.Show();
+
+                            GridNewName.Visibility = Visibility.Hidden;
+                            gameWindowShown = true;
+                            lblErrorMessage.Content = "Press enter to start game";
+                            Hide();
+                        }
+                        else
+                        {
+                            lblErrorMessage.Content = "This name already exists";
+                        }
+                    }
+                }
             }
         }
         private void BtnQuit_Click(object sender, RoutedEventArgs e)
@@ -85,22 +113,36 @@ namespace Game_project_OOP
                 // Parse the JSON string into a dictionary
                 var data = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(jsonString);
 
-                // Retrieve all the keys (headers)
-                IEnumerable<string> headers = data.Keys;
-
-                // Iterate over the headers and print them
-                foreach (string header in headers)
+                if (data != null)
                 {
-                    lstbxLoadedGames.Items.Add(header);
+                    //if (lstbxLoadedGames.Items.Count == 0)
+                    //{
+                        // Retrieve all the keys (headers)
+                        IEnumerable<string> headers = data.Keys;
+
+                        lstbxLoadedGames.Items.Clear();
+
+                        // Iterate over the headers and print them
+                        foreach (string header in headers)
+                        {
+                            lstbxLoadedGames.Items.Add($"o {header}");
+                        }
+                    //}
+                }
+                else if(!lstbxLoadedGames.Items.Contains("No previous games found."))
+                {
+                    lstbxLoadedGames.Items.Add("No previous games found.");
                 }
             }
             lstbxLoadedGames.Visibility = Visibility.Visible;
-            stackPanelNewName.Visibility = Visibility.Hidden;
+            GridNewName.Visibility = Visibility.Hidden;
         }
 
         private void BtnNewGame_Click(object sender, RoutedEventArgs e)
         {
-            stackPanelNewName.Visibility = Visibility.Visible;
+            txbxGameName.Text = string.Empty;
+            lblErrorMessage.Content = "Press enter to start game";
+            GridNewName.Visibility = Visibility.Visible;
             lstbxLoadedGames.Visibility = Visibility.Hidden;
 
         }
@@ -110,9 +152,12 @@ namespace Game_project_OOP
             try
             {
                 if (gameWindowShown)
+                {
                     Show();
+                    gameWindowShown = false;
+                }
             }
-            catch(Exception ex)
+            catch
             {
                 // Do nothing, this exception does not need to handled.
             }

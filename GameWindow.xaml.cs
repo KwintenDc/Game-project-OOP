@@ -1,22 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Xml;
 using System.IO;
 using Path = System.Windows.Shapes.Path;
-using System.Text.Json;
 using Newtonsoft.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Game_project_OOP
@@ -47,13 +38,13 @@ namespace Game_project_OOP
         string fileName = "C:\\Users\\decle\\source\\repos\\Game project OOP\\data.json";
 
         string[] userChoices = new string[3];
-        public string TltpCitizens { get; set; }
-        public string TltpHappiness { get; set; }
-        public string TltpHealth { get; set; }
-        public string TltpDefense { get; set; }
-        public string TltpMaterials { get; set; }
-        public string TltpWheat { get; set; }
-        public string TltpBread { get; set; }
+        public string? TltpCitizens { get; set; }
+        public string? TltpHappiness { get; set; }
+        public string? TltpHealth { get; set; }
+        public string? TltpDefense { get; set; }
+        public string? TltpMaterials { get; set; }
+        public string? TltpWheat { get; set; }
+        public string? TltpBread { get; set; }
 
         public GameWindow(string gameName = "0")
         {
@@ -357,6 +348,7 @@ namespace Game_project_OOP
                         CraftingPhase();
                         DefendingPhase();
                         TransitionPhase();
+                        CheckIfLost();
                         break;
                     case 2:
                         BuildingPhase();
@@ -364,6 +356,7 @@ namespace Game_project_OOP
                         UpgradingPhase();
                         DefendingPhase();
                         TransitionPhase();
+                        CheckIfLost();
                         break;
                     case 3:
                         if (totalEmptyFields > 0)
@@ -374,6 +367,7 @@ namespace Game_project_OOP
                         DefendingPhase();
                         if (!Part3Finished)
                             TransitionPhase();
+                        CheckIfLost();
                         break;
                     default:
                         currentPhase = GamePhase.GameOver;
@@ -391,421 +385,239 @@ namespace Game_project_OOP
             }
             else
             {
-                // TODO
+                if(userInput != null)
+                {
+                    Close();
+                }
+            }
+        }
+        private void CheckIfLost()
+        {
+            if(city.Citizens <= 0)
+            {
+                currentPhase = GamePhase.GameOver;
+                gameOutput = "<<< GAME OVER >>>\r\n";
+                gameOutput += "You have failed the game, all your citizens left or died.\r\n\n";
+                gameOutput += "1. Leave the game.";
+            }
+            else if(city.Happiness <= 0)
+            {
+                currentPhase = GamePhase.GameOver;
+                gameOutput = "<<< GAME OVER >>>\r\n";
+                gameOutput += "You have failed the game, your citizens were extremely unhappy and kicked you out of the village.\r\n\n";
+                gameOutput += "1. Leave the game.";
             }
         }
 
         private void BuildingPhase()
         {
-            // Code for building phase.
-            if (currentPhase == GamePhase.Building)
+            try
             {
-                switch (game.Part)
+                // Code for building phase.
+                if (currentPhase == GamePhase.Building)
                 {
-                    case 1:
-                        game.TotalRounds = 4;
-                        break;
-                    case 2:
-                        game.TotalRounds = 7;
-                        break;
-                    case 3:
-                        game.TotalRounds = 9;
-                        break;
-                }
-                if (game.TotalRounds != game.Round)
-                {
-                    gameOutput = "<<< BUILDING PHASE >>>\n\r";
-                    gameOutput += "What building would you like to build?\n\r";
-                    gameOutput += $"0. Stop building phase \r1. Field (Cost: {field.MaterialsRequired}) \r2. Mine (Cost: {mine.MaterialsRequired})" +
-                        $"\r3. House (Cost: {house.MaterialsRequired})\r";
-                    if (game.Part != 1)
-                        gameOutput += $"4. Defense (Cost: {defense.MaterialsRequired})\n\r";
-                    if (userInput != null)
+                    switch (game.Part)
                     {
-                        switch (userInput)
+                        case 1:
+                            game.TotalRounds = 4;
+                            break;
+                        case 2:
+                            game.TotalRounds = 7;
+                            break;
+                        case 3:
+                            game.TotalRounds = 9;
+                            break;
+                    }
+                    if (game.TotalRounds != game.Round)
+                    {
+                        gameOutput = "<<< BUILDING PHASE >>>\n\r";
+                        gameOutput += "What building would you like to build?\n\r";
+                        gameOutput += $"0. Stop building phase \r1. Field (Cost: {field.MaterialsRequired}) \r2. Mine (Cost: {mine.MaterialsRequired})" +
+                            $"\r3. House (Cost: {house.MaterialsRequired})\r";
+                        if (game.Part != 1)
+                            gameOutput += $"4. Defense (Cost: {defense.MaterialsRequired})\n\r";
+                        if (userInput != null)
                         {
-                            case "0":
-                                game.Round = game.TotalRounds;
-                                userInput = null;
-                                break;
-                            case "1":
-                                gameOutput += "\nPick an empty spot for your new field.\n\r";
-                                if ((clickedPathNumber != 0) && (city.CityLayout[clickedPathNumber - 1] == "E"))
-                                {
-                                    if (city.MaxFields != city.TotalFields)
-                                    {
-                                        city.CityLayout[clickedPathNumber - 1] = "F";
-                                        materials.Amount -= field.MaterialsRequired;
-                                        city.TotalFields++;
-                                        if (isFirstRound)
-                                            isFirstRound = false;
-                                        else
-                                            game.Round++;
-
-                                        // Reset vars for following round.
-                                        gameOutput = gameOutput.Replace("\nPick an empty spot for your new field.\n\r", "");
-                                        userInput = null;
-                                        totalEmptyFields--;
-                                    }
-                                    else
-                                    {
-                                        gameOutput = gameOutput.Replace("\nPick an empty spot for your new field.\n\r", "");
-                                        gameOutput += "Max Fields reached.";
-                                        userInput = null;
-                                    }
-                                }
-                                clickedPathNumber = 0;
-                                break;
-                            case "2":
-                                gameOutput += "\nPick an empty spot for your new mine.\n\r";
-                                if ((clickedPathNumber != 0) && (city.CityLayout[clickedPathNumber - 1] == "E"))
-                                {
-                                    if (city.MaxMines != city.TotalMines)
-                                    {
-                                        city.CityLayout[clickedPathNumber - 1] = "M";
-                                        materials.Amount -= field.MaterialsRequired;
-                                        city.TotalMines++;
-                                        if (isFirstRound)
-                                            isFirstRound = false;
-                                        else
-                                            game.Round++;
-
-                                        // Reset vars for following round.
-                                        gameOutput = gameOutput.Replace("\nPick an empty spot for your new mine.\n\r", "");
-                                        userInput = null;
-                                        totalEmptyFields--;
-                                    }
-                                    else
-                                    {
-                                        gameOutput = gameOutput.Replace("\nPick an empty spot for your new mine.\n\r", "");
-                                        gameOutput += "Max mines reached.";
-                                        userInput = null;
-                                    }
-                                }
-                                clickedPathNumber = 0;
-                                break;
-                            case "3":
-                                gameOutput += "\nPick an empty spot for your new house.\n\r";
-                                if ((clickedPathNumber != 0) && (city.CityLayout[clickedPathNumber - 1] == "E"))
-                                {
-                                    if (city.MaxHouses != city.TotalHouses)
-                                    {
-                                        city.CityLayout[clickedPathNumber - 1] = "H";
-                                        materials.Amount -= field.MaterialsRequired;
-                                        city.TotalHouses++;
-                                        if (isFirstRound)
-                                            isFirstRound = false;
-                                        else
-                                            game.Round++;
-
-                                        // Reset vars for following round.
-                                        gameOutput = gameOutput.Replace("\nPick an empty spot for your new house.\n\r", "");
-                                        userInput = null;
-                                        totalEmptyFields--;
-                                    }
-                                    else
-                                    {
-                                        gameOutput = gameOutput.Replace("\nPick an empty spot for your new house.\n\r", "");
-                                        gameOutput += "Max houses reached.";
-                                        userInput = null;
-                                    }
-                                }
-                                clickedPathNumber = 0;
-                                break;
-                            case "4":
-                                if (game.Part != 1)
-                                {
-                                    gameOutput += "\nPick an empty spot for your new defensive building.\n\r";
+                            switch (userInput)
+                            {
+                                case "0":
+                                    game.Round = game.TotalRounds;
+                                    userInput = null;
+                                    break;
+                                case "1":
+                                    gameOutput += "\nPick an empty spot for your new field.\n\r";
                                     if ((clickedPathNumber != 0) && (city.CityLayout[clickedPathNumber - 1] == "E"))
                                     {
-                                        if (city.MaxDefenses != city.TotalDefenses)
+                                        if (city.MaxFields != city.TotalFields)
                                         {
-                                            city.CityLayout[clickedPathNumber - 1] = "D";
-                                            materials.Amount -= defense.MaterialsRequired;
-                                            city.TotalDefenses++;
+                                            city.CityLayout[clickedPathNumber - 1] = "F";
+                                            materials.Amount -= field.MaterialsRequired;
+                                            city.TotalFields++;
                                             if (isFirstRound)
                                                 isFirstRound = false;
                                             else
                                                 game.Round++;
 
                                             // Reset vars for following round.
-                                            gameOutput = gameOutput.Replace("\nPick an empty spot for your new defensive building.\n\r", "");
+                                            gameOutput = gameOutput.Replace("\nPick an empty spot for your new field.\n\r", "");
                                             userInput = null;
                                             totalEmptyFields--;
                                         }
                                         else
                                         {
-                                            gameOutput = gameOutput.Replace("\nPick an empty spot for your new defensive building.\n\r", "");
-                                            gameOutput += "Max defensive buildings reached.";
+                                            gameOutput = gameOutput.Replace("\nPick an empty spot for your new field.\n\r", "");
+                                            gameOutput += "Max Fields reached.";
                                             userInput = null;
                                         }
                                     }
                                     clickedPathNumber = 0;
-                                }
-                                else
-                                    gameOutput += "\nPick a valid option (0 , 1 , 2 , 3)";
-                                break;
-                            default:
-                                if (game.Part == 1)
-                                    gameOutput += "\nPick a valid option (0 , 1 , 2 , 3)";
-                                else
-                                    gameOutput += "\nPick a valid option (0, 1, 2, 3, 4)";
-                                break;
+                                    break;
+                                case "2":
+                                    gameOutput += "\nPick an empty spot for your new mine.\n\r";
+                                    if ((clickedPathNumber != 0) && (city.CityLayout[clickedPathNumber - 1] == "E"))
+                                    {
+                                        if (city.MaxMines != city.TotalMines)
+                                        {
+                                            city.CityLayout[clickedPathNumber - 1] = "M";
+                                            materials.Amount -= field.MaterialsRequired;
+                                            city.TotalMines++;
+                                            if (isFirstRound)
+                                                isFirstRound = false;
+                                            else
+                                                game.Round++;
+
+                                            // Reset vars for following round.
+                                            gameOutput = gameOutput.Replace("\nPick an empty spot for your new mine.\n\r", "");
+                                            userInput = null;
+                                            totalEmptyFields--;
+                                        }
+                                        else
+                                        {
+                                            gameOutput = gameOutput.Replace("\nPick an empty spot for your new mine.\n\r", "");
+                                            gameOutput += "Max mines reached.";
+                                            userInput = null;
+                                        }
+                                    }
+                                    clickedPathNumber = 0;
+                                    break;
+                                case "3":
+                                    gameOutput += "\nPick an empty spot for your new house.\n\r";
+                                    if ((clickedPathNumber != 0) && (city.CityLayout[clickedPathNumber - 1] == "E"))
+                                    {
+                                        if (city.MaxHouses != city.TotalHouses)
+                                        {
+                                            city.CityLayout[clickedPathNumber - 1] = "H";
+                                            materials.Amount -= field.MaterialsRequired;
+                                            city.TotalHouses++;
+                                            if (isFirstRound)
+                                                isFirstRound = false;
+                                            else
+                                                game.Round++;
+
+                                            // Reset vars for following round.
+                                            gameOutput = gameOutput.Replace("\nPick an empty spot for your new house.\n\r", "");
+                                            userInput = null;
+                                            totalEmptyFields--;
+                                        }
+                                        else
+                                        {
+                                            gameOutput = gameOutput.Replace("\nPick an empty spot for your new house.\n\r", "");
+                                            gameOutput += "Max houses reached.";
+                                            userInput = null;
+                                        }
+                                    }
+                                    clickedPathNumber = 0;
+                                    break;
+                                case "4":
+                                    if (game.Part != 1)
+                                    {
+                                        gameOutput += "\nPick an empty spot for your new defensive building.\n\r";
+                                        if ((clickedPathNumber != 0) && (city.CityLayout[clickedPathNumber - 1] == "E"))
+                                        {
+                                            if (city.MaxDefenses != city.TotalDefenses)
+                                            {
+                                                city.CityLayout[clickedPathNumber - 1] = "D";
+                                                materials.Amount -= defense.MaterialsRequired;
+                                                city.TotalDefenses++;
+                                                if (isFirstRound)
+                                                    isFirstRound = false;
+                                                else
+                                                    game.Round++;
+
+                                                // Reset vars for following round.
+                                                gameOutput = gameOutput.Replace("\nPick an empty spot for your new defensive building.\n\r", "");
+                                                userInput = null;
+                                                totalEmptyFields--;
+                                            }
+                                            else
+                                            {
+                                                gameOutput = gameOutput.Replace("\nPick an empty spot for your new defensive building.\n\r", "");
+                                                gameOutput += "Max defensive buildings reached.";
+                                                userInput = null;
+                                            }
+                                        }
+                                        clickedPathNumber = 0;
+                                    }
+                                    else
+                                        gameOutput += "\nPick a valid option (0 , 1 , 2 , 3)";
+                                    break;
+                                default:
+                                    if (game.Part == 1)
+                                        gameOutput += "\nPick a valid option (0 , 1 , 2 , 3)";
+                                    else
+                                        gameOutput += "\nPick a valid option (0, 1, 2, 3, 4)";
+                                    break;
+                            }
                         }
                     }
-                }
-                if ((game.Round > game.TotalRounds - 1) || (materials.Amount < 20))
-                {
-                    isFirstRound = true;
-                    nextPhase = GamePhase.Crafting;
-                    RoundFinished = true;
-                    game.Round = game.TotalRounds;
-                    AddRecoursesAfterRound();
-                }
+                    if ((game.Round > game.TotalRounds - 1) || (materials.Amount < 20))
+                    {
+                        isFirstRound = true;
+                        nextPhase = GamePhase.Crafting;
+                        RoundFinished = true;
+                        game.Round = game.TotalRounds;
+                        AddRecoursesAfterRound();
+                    }
 
+                }
+            }
+            catch (IndexOutOfRangeException ex) 
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (FormatException ex) 
+            {
+                Console.WriteLine(ex.Message);
+                gameOutput += "\nInvalid Format, please only use valid numbers.";
             }
         }
         private void CraftingPhase()
         {
-            // Code for crafting phase.
-            if (currentPhase == GamePhase.Crafting)
+            try
             {
-                game.TotalRounds = 1;
-                gameOutput = "<<< CRAFTING PHASE >>>\n\r";
-                gameOutput += "Do you want to craft bread from wheat? (3 -> 1)\n\r";
-                gameOutput += "1. Yes \r2. No\n\r";
-                if (userInput != null && userChoice != 1)
+                // Code for crafting phase.
+                if (currentPhase == GamePhase.Crafting)
                 {
-
-                    switch (userInput)
-                    {
-                        case "1":
-                            userChoice = 1;
-                            userInput = null;
-                            break;
-                        case "2":
-                            if (game.Part == 1)
-                                nextPhase = GamePhase.Defending;
-                            else if (game.Part == 2)
-                                nextPhase = GamePhase.Upgrading;
-                            else if (game.Part == 3)
-                                nextPhase = GamePhase.Trading;
-                            userInput = null;
-                            RoundFinished = true;
-                            AddRecoursesAfterRound();
-                            return;
-                        default:
-                            gameOutput += "Pick a valid option (1 , 2)";
-                            break;
-
-                    }
-                }
-                if (userChoice == 1)
-                {
-                    gameOutput = "<<< CRAFTING PHASE >>>\n\r";
-                    gameOutput += $"How much bread do you want to craft? (Max : {wheat.Amount / WHEAT_TO_BREAD_RATIO})\n\r";
-
-                    if (userInput != null)
-                    {
-                        if (wheat.Amount >= (Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO))
-                        {
-                            bread.Amount += Convert.ToInt32(userInput);
-                            wheat.Amount -= Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO;
-                            userInput = null;
-                            userChoice = 0;
-                            RoundFinished = true;
-                            if (game.Part == 1)
-                                nextPhase = GamePhase.Defending;
-                            else if (game.Part == 2)
-                                nextPhase = GamePhase.Upgrading;
-                            else if (game.Part == 3)
-                                nextPhase = GamePhase.Trading;
-                            AddRecoursesAfterRound();
-                            return;
-                        }
-                        else
-                        {
-                            gameOutput = gameOutput.Replace("How much bread do you want to craft?\n\r", "");
-                            gameOutput += $"You don't have enough wheat, the maximum amount of bread you can craft is {wheat.Amount / WHEAT_TO_BREAD_RATIO}," +
-                                $" please enter a valid number\r\n";
-                        }
-                    }
-                }
-            }
-        }
-        private void UpgradingPhase()
-        {
-            // Code for upgrading phase.
-            if (currentPhase == GamePhase.Upgrading)
-            {
-                gameOutput = "<<< UPGRADING PHASE >>>\n\r";
-                gameOutput += "How many buildings would you like to upgrade?";
-                if (!UpgradeStarted)
-                {
-                    if ((materials.Amount / mine.MaterialsRequiredToUpgrade) < (city.TotalDefenses + city.TotalMines + city.TotalFields))
-                        gameOutput += $" (Max : {materials.Amount / mine.MaterialsRequiredToUpgrade})\r\n";
-                    else
-                        gameOutput += $" (Max : {city.TotalDefenses + city.TotalMines + city.TotalFields - city.TotalUpgradedDefenses - city.TotalUpgradedFields - city.TotalUpgradedMines})\r\n";
-                }
-                else
-                {
-                    gameOutput += $" (Max : {userChoice})\r\n";
-                }
-                if ((materials.Amount / mine.MaterialsRequiredToUpgrade) <= 0 || (city.TotalDefenses + city.TotalMines + city.TotalFields - city.TotalUpgradedDefenses - city.TotalUpgradedFields - city.TotalUpgradedMines) <= 0)
-                {
-                    UpgradeStarted = false;
-                    userChoice = 0;
-                    userInput = null;
-                    nextPhase = GamePhase.Defending;
-                    isFirstRound = true;
-                    clickedPathNumber = 0;
-                    RoundFinished = true;
                     game.TotalRounds = 1;
-                    AddRecoursesAfterRound();
-                }
-                if (userInput != null)
-                {
-                    userChoice = Convert.ToInt32(userInput);
-                    if (userChoice <= (materials.Amount / mine.MaterialsRequiredToUpgrade) || UpgradeStarted)
+                    gameOutput = "<<< CRAFTING PHASE >>>\n\r";
+                    gameOutput += "Do you want to craft bread from wheat? (3 -> 1)\n\r";
+                    gameOutput += "1. Yes \r2. No\n\r";
+                    if (userInput != null && userChoice != 1)
                     {
-                        game.TotalRounds = userChoice;
-                        if (game.Round != game.TotalRounds)
-                        {
-                            gameOutput += "Pick a building to upgrade.\n\r";
-                            UpgradeStarted = true;
-                            if (clickedPathNumber != 0)
-                            {
-                                switch (city.CityLayout[clickedPathNumber - 1])
-                                {
-                                    case "F":
-                                        city.CityLayout[clickedPathNumber - 1] = "Fu";
-                                        materials.Amount -= field.MaterialsRequiredToUpgrade;
-                                        city.TotalUpgradedFields++;
-                                        if (isFirstRound)
-                                            isFirstRound = false;
-                                        else
-                                            game.Round++;
-                                        break;
-                                    case "M":
-                                        city.CityLayout[clickedPathNumber - 1] = "Mu";
-                                        materials.Amount -= mine.MaterialsRequiredToUpgrade;
-                                        city.TotalUpgradedMines++;
-                                        if (isFirstRound)
-                                            isFirstRound = false;
-                                        else
-                                            game.Round++;
-                                        break;
-                                    case "D":
-                                        city.CityLayout[clickedPathNumber - 1] = "Du";
-                                        materials.Amount -= defense.MaterialsRequiredToUpgrade;
-                                        city.TotalUpgradedDefenses++;
-                                        if (isFirstRound)
-                                            isFirstRound = false;
-                                        else
-                                            game.Round++;
-                                        break;
-                                    default:
-                                        gameOutput.Replace("Pick building to upgrade.\n\r", "");
-                                        gameOutput += "Choose a valid building (field , mine , defense)";
-                                        break;
-                                }
-                            }
-                        }
-                        if (game.Round > game.TotalRounds - 1)
-                        {
-                            UpgradeStarted = false;
-                            userChoice = 0;
-                            userInput = null;
-                            nextPhase = GamePhase.Defending;
-                            isFirstRound = true;
-                            clickedPathNumber = 0;
-                            RoundFinished = true;
-                            game.TotalRounds = 1;
-                            AddRecoursesAfterRound();
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        userChoice = 0;
-                        userInput = null;
-                        gameOutput += "Choose a valid amount";
-                    }
-                }
-            }
-        }
-        private void DefendingPhase()
-        {
-            // Code for defending phase.
-            if (currentPhase == GamePhase.Defending)
-            {
-                if (isFirstRound)
-                {
-                    gameOutput = "<<< DEFENDING PHASE >>>\n\r";
-                    randNum = random.Next(1, 11);
-                    if (randNum <= 6)
-                    {
-                        gameOutput += "A village is attacking you! It's a pretty small village so they don't do much damage.\n\r" +
-                            "The mayor retreats his troops as you are still much to strong for his village.\n\r";
-                        gameOutput += AI.Attack(city, 1, wheat, materials, bread);
-                        gameOutput += "\r\n\n1. Go to next phase";
-                    }
-                    if (6 < randNum && randNum <= 9)
-                    {
-                        gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
-                            "The mayor calls his troops back a minor loss for your village..\n\r";
-                        gameOutput += AI.Attack(city, 2, wheat, materials, bread);
-                        gameOutput += "\r\n\n1. Go to next phase";
-                    }
-                    if (10 <= randNum)
-                    {
-                        gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
-                                "The mayor calls his troops back a great loss for your village.\n\r";
-                        gameOutput += AI.Attack(city, 3, wheat, materials, bread);
-                        gameOutput += "\r\n\n1. Go to next phase";
-                    }
-                    isFirstRound = false;
-                }
-                if (userInput != null)
-                {
-                    currentPhase = GamePhase.Transition;
-                    userInput = null;
-                    if (Part3Finished)
-                        roundsToWin++;
-                    if (Part3Finished && (totalEmptyFields <= 0))
-                    {
-                        currentPhase = GamePhase.Crafting;
-                        isFirstRound = true;
-                    }
-                    else if (Part3Finished && (totalEmptyFields > 0))
-                    {
-                        currentPhase = GamePhase.Building;
-                        isFirstRound = true;
-                    }
-                    return;
-                }
-            }
-        }
-        private void TradingPhase()
-        {
-            // Code for trading phase.
-            if (currentPhase == GamePhase.Trading)
-            {
-                gameOutput = "<<< Trading phase >>>\n\r";
-                gameOutput += "Do you want to trade with a friendly village?\n\r";
-                gameOutput += "1. Yes \r2. No\n\r";
-                if (userInput != null)
-                {
-                    if (userChoice == 0)
-                    {
+
                         switch (userInput)
                         {
                             case "1":
-                                userInput = null;
                                 userChoice = 1;
+                                userInput = null;
                                 break;
                             case "2":
-                                nextPhase = GamePhase.Upgrading;
+                                if (game.Part == 1)
+                                    nextPhase = GamePhase.Defending;
+                                else if (game.Part == 2)
+                                    nextPhase = GamePhase.Upgrading;
+                                else if (game.Part == 3)
+                                    nextPhase = GamePhase.Trading;
                                 userInput = null;
                                 RoundFinished = true;
                                 AddRecoursesAfterRound();
@@ -813,203 +625,462 @@ namespace Game_project_OOP
                             default:
                                 gameOutput += "Pick a valid option (1 , 2)";
                                 break;
+
                         }
                     }
-                }
-                if (userChoice == 1)
-                {
-                    gameOutput = "<<< Trading phase >>>\n\r";
-                    gameOutput += "What resource do you want to trade?\n\r";
-                    gameOutput += "1. Materials \r2. Wheat \r3. Bread\r\n";
-                    if (userInput != null)
+                    if (userChoice == 1)
                     {
-                        switch (userInput)
+                        gameOutput = "<<< CRAFTING PHASE >>>\n\r";
+                        gameOutput += $"How much bread do you want to craft? (Max : {wheat.Amount / WHEAT_TO_BREAD_RATIO})\n\r";
+
+                        if (userInput != null)
                         {
-                            case "1":
-                                userChoice = 2;
-                                userChoices[0] = "Materials";
+                            if (wheat.Amount >= (Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO))
+                            {
+                                bread.Amount += Convert.ToInt32(userInput);
+                                wheat.Amount -= Convert.ToInt32(userInput) * WHEAT_TO_BREAD_RATIO;
                                 userInput = null;
-                                break;
-                            case "2":
-                                userChoice = 2;
-                                userChoices[0] = "Wheat";
-                                userInput = null;
-                                break;
-                            case "3":
-                                userChoice = 2;
-                                userChoices[0] = "Bread";
-                                userInput = null;
-                                break;
-                            default:
-                                gameOutput += "Pick a valid option (1 , 2 , 3)";
-                                break;
+                                userChoice = 0;
+                                RoundFinished = true;
+                                if (game.Part == 1)
+                                    nextPhase = GamePhase.Defending;
+                                else if (game.Part == 2)
+                                    nextPhase = GamePhase.Upgrading;
+                                else if (game.Part == 3)
+                                    nextPhase = GamePhase.Trading;
+                                AddRecoursesAfterRound();
+                                return;
+                            }
+                            else
+                            {
+                                gameOutput = gameOutput.Replace("How much bread do you want to craft?\n\r", "");
+                                gameOutput += $"You don't have enough wheat, the maximum amount of bread you can craft is {wheat.Amount / WHEAT_TO_BREAD_RATIO}," +
+                                    $" please enter a valid number\r\n";
+                            }
                         }
                     }
                 }
-                if (userChoice == 2)
+            }
+            catch(FormatException ex)
+            {
+                Console.WriteLine(ex.Message);
+                gameOutput += "\nInvalid Format, please only use valid numbers.";
+            }
+        }
+        private void UpgradingPhase()
+        {
+            try
+            {
+                // Code for upgrading phase.
+                if (currentPhase == GamePhase.Upgrading)
                 {
-                    gameOutput = "<<< Trading phase >>>\n\r";
-                    gameOutput += $"How much {userChoices[0]} do you want to give?\n\r";
-                    if (userInput != null)
+                    gameOutput = "<<< UPGRADING PHASE >>>\n\r";
+                    gameOutput += "How many buildings would you like to upgrade?";
+                    if (!UpgradeStarted)
                     {
-                        userChoices[1] = userInput;
-                        userChoice = 3;
-                        userInput = null;
+                        if ((materials.Amount / mine.MaterialsRequiredToUpgrade) < (city.TotalDefenses + city.TotalMines + city.TotalFields))
+                            gameOutput += $" (Max : {materials.Amount / mine.MaterialsRequiredToUpgrade})\r\n";
+                        else
+                            gameOutput += $" (Max : {city.TotalDefenses + city.TotalMines + city.TotalFields - city.TotalUpgradedDefenses - city.TotalUpgradedFields - city.TotalUpgradedMines})\r\n";
                     }
-                }
-                if (userChoice == 3)
-                {
-                    gameOutput = "<<< Trading phase >>>\n\r";
-                    gameOutput += "What resource do you want to receive?\n\r";
-                    gameOutput += "1. Materials \r2. Wheat \r3. Bread\r\n";
-                    if (userInput != null)
+                    else
                     {
-                        switch (userInput)
-                        {
-                            case "1":
-                                userChoice = 4;
-                                userChoices[2] = "Materials";
-                                userInput = null;
-                                break;
-                            case "2":
-                                userChoice = 4;
-                                userChoices[2] = "Wheat";
-                                userInput = null;
-                                break;
-                            case "3":
-                                userChoice = 4;
-                                userChoices[2] = "Bread";
-                                userInput = null;
-                                break;
-                            default:
-                                gameOutput += "Pick a valid option (1 , 2 , 3)";
-                                break;
-                        }
+                        gameOutput += $" (Max : {userChoice})\r\n";
                     }
-                }
-                if (userChoice == 4)
-                {
-                    gameOutput = "<<< Trading phase >>>\n\r";
-                    tradeResult = Convert.ToInt32(AI.Trade(userChoices));
-                    gameOutput += $"The village accepted the {userChoices[1]} {userChoices[0]} and gave you {tradeResult} {userChoices[2]} in return.\n\r";
-                    gameOutput += "1. Go to next phase";
-                    switch (userChoices[0])
+                    if ((materials.Amount / mine.MaterialsRequiredToUpgrade) <= 0 || (city.TotalDefenses + city.TotalMines + city.TotalFields - city.TotalUpgradedDefenses - city.TotalUpgradedFields - city.TotalUpgradedMines) <= 0)
                     {
-                        case "Materials":
-                            materials.Amount -= Convert.ToInt32(userChoices[1]);
-                            break;
-                        case "Wheat":
-                            wheat.Amount -= Convert.ToInt32(userChoices[1]);
-                            break;
-                        case "Bread":
-                            bread.Amount -= Convert.ToInt32(userChoices[1]);
-                            break;
-                    }
-                    switch (userChoices[2])
-                    {
-                        case "Materials":
-                            materials.Amount += tradeResult;
-                            userChoice = 5;
-                            break;
-                        case "Wheat":
-                            wheat.Amount += tradeResult;
-                            userChoice = 5;
-                            break;
-                        case "Bread":
-                            bread.Amount += tradeResult;
-                            userChoice = 5;
-                            break;
-                    }
-                }
-                if (userChoice == 5)
-                {
-                    gameOutput = "<<< Trading phase >>>\n\r";
-                    gameOutput += $"The village accepted the {userChoices[1]} {userChoices[0]} and gave you {tradeResult} {userChoices[2]} in return.\n\r";
-                    gameOutput += "1. Go to next phase";
-                    if (userInput != null)
-                    {
-                        nextPhase = GamePhase.Upgrading;
-                        userInput = null;
-                        RoundFinished = true;
+                        UpgradeStarted = false;
                         userChoice = 0;
+                        userInput = null;
+                        nextPhase = GamePhase.Defending;
+                        isFirstRound = true;
+                        clickedPathNumber = 0;
+                        RoundFinished = true;
+                        game.TotalRounds = 1;
                         AddRecoursesAfterRound();
                     }
+                    if (userInput != null)
+                    {
+                        userChoice = Convert.ToInt32(userInput);
+                        if (userChoice <= (materials.Amount / mine.MaterialsRequiredToUpgrade) || UpgradeStarted)
+                        {
+                            game.TotalRounds = userChoice;
+                            if (game.Round != game.TotalRounds)
+                            {
+                                gameOutput += "Pick a building to upgrade.\n\r";
+                                UpgradeStarted = true;
+                                if (clickedPathNumber != 0)
+                                {
+                                    switch (city.CityLayout[clickedPathNumber - 1])
+                                    {
+                                        case "F":
+                                            city.CityLayout[clickedPathNumber - 1] = "Fu";
+                                            materials.Amount -= field.MaterialsRequiredToUpgrade;
+                                            city.TotalUpgradedFields++;
+                                            if (isFirstRound)
+                                                isFirstRound = false;
+                                            else
+                                                game.Round++;
+                                            break;
+                                        case "M":
+                                            city.CityLayout[clickedPathNumber - 1] = "Mu";
+                                            materials.Amount -= mine.MaterialsRequiredToUpgrade;
+                                            city.TotalUpgradedMines++;
+                                            if (isFirstRound)
+                                                isFirstRound = false;
+                                            else
+                                                game.Round++;
+                                            break;
+                                        case "D":
+                                            city.CityLayout[clickedPathNumber - 1] = "Du";
+                                            materials.Amount -= defense.MaterialsRequiredToUpgrade;
+                                            city.TotalUpgradedDefenses++;
+                                            if (isFirstRound)
+                                                isFirstRound = false;
+                                            else
+                                                game.Round++;
+                                            break;
+                                        default:
+                                            gameOutput.Replace("Pick building to upgrade.\n\r", "");
+                                            gameOutput += "Choose a valid building (field , mine , defense)";
+                                            break;
+                                    }
+                                }
+                            }
+                            if (game.Round > game.TotalRounds - 1)
+                            {
+                                UpgradeStarted = false;
+                                userChoice = 0;
+                                userInput = null;
+                                nextPhase = GamePhase.Defending;
+                                isFirstRound = true;
+                                clickedPathNumber = 0;
+                                RoundFinished = true;
+                                game.TotalRounds = 1;
+                                AddRecoursesAfterRound();
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            userChoice = 0;
+                            userInput = null;
+                            gameOutput += "Choose a valid amount";
+                        }
+                    }
                 }
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine(ex.Message);
+                gameOutput += "Invalid input format. Please enter a valid amount.";
+            }
+            catch (OverflowException ex)
+            {
+                Console.WriteLine(ex.Message);
+                gameOutput += "Input value is too large. Please enter a valid amount.";
+            }
+        }
+        private void DefendingPhase()
+        {
+            try 
+            { 
+                // Code for defending phase.
+                if (currentPhase == GamePhase.Defending)
+                {
+                    if (isFirstRound)
+                    {
+                        gameOutput = "<<< DEFENDING PHASE >>>\n\r";
+                        randNum = random.Next(1, 11);
+                        if (randNum <= 6)
+                        {
+                            gameOutput += "A village is attacking you! It's a pretty small village so they don't do much damage.\n\r" +
+                                "The mayor retreats his troops as you are still much to strong for his village.\n\r";
+                            gameOutput += AI.Attack(city, 1, wheat, materials, bread);
+                            gameOutput += "\r\n\n1. Go to next phase";
+                        }
+                        if (6 < randNum && randNum <= 9)
+                        {
+                            gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
+                                "The mayor calls his troops back a minor loss for your village..\n\r";
+                            gameOutput += AI.Attack(city, 2, wheat, materials, bread);
+                            gameOutput += "\r\n\n1. Go to next phase";
+                        }
+                        if (10 <= randNum)
+                        {
+                            gameOutput += "A village is attacking you! It's a big village so they do much damage.\n\r" +
+                                    "The mayor calls his troops back a great loss for your village.\n\r";
+                            gameOutput += AI.Attack(city, 3, wheat, materials, bread);
+                            gameOutput += "\r\n\n1. Go to next phase";
+                        }
+                        isFirstRound = false;
+                    }
+                    if (userInput != null)
+                    {
+                        currentPhase = GamePhase.Transition;
+                        userInput = null;
+                        if (Part3Finished)
+                            roundsToWin++;
+                        if (Part3Finished && (totalEmptyFields <= 0))
+                        {
+                            currentPhase = GamePhase.Crafting;
+                            isFirstRound = true;
+                        }
+                        else if (Part3Finished && (totalEmptyFields > 0))
+                        {
+                            currentPhase = GamePhase.Building;
+                            isFirstRound = true;
+                        }
+                        return;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                gameOutput += "An error occurred during the defending phase. Please try again.";
+                Console.WriteLine(ex.Message);
+            }
+        }
+        private void TradingPhase()
+        {
+            try
+            {
+                // Code for trading phase.
+                if (currentPhase == GamePhase.Trading)
+                {
+                    gameOutput = "<<< Trading phase >>>\n\r";
+                    gameOutput += "Do you want to trade with a friendly village?\n\r";
+                    gameOutput += "1. Yes \r2. No\n\r";
+                    if (userInput != null)
+                    {
+                        if (userChoice == 0)
+                        {
+                            switch (userInput)
+                            {
+                                case "1":
+                                    userInput = null;
+                                    userChoice = 1;
+                                    break;
+                                case "2":
+                                    nextPhase = GamePhase.Upgrading;
+                                    userInput = null;
+                                    RoundFinished = true;
+                                    AddRecoursesAfterRound();
+                                    return;
+                                default:
+                                    gameOutput += "Pick a valid option (1 , 2)";
+                                    break;
+                            }
+                        }
+                    }
+                    if (userChoice == 1)
+                    {
+                        gameOutput = "<<< Trading phase >>>\n\r";
+                        gameOutput += "What resource do you want to trade?\n\r";
+                        gameOutput += "1. Materials \r2. Wheat \r3. Bread\r\n";
+                        if (userInput != null)
+                        {
+                            switch (userInput)
+                            {
+                                case "1":
+                                    userChoice = 2;
+                                    userChoices[0] = "Materials";
+                                    userInput = null;
+                                    break;
+                                case "2":
+                                    userChoice = 2;
+                                    userChoices[0] = "Wheat";
+                                    userInput = null;
+                                    break;
+                                case "3":
+                                    userChoice = 2;
+                                    userChoices[0] = "Bread";
+                                    userInput = null;
+                                    break;
+                                default:
+                                    gameOutput += "Pick a valid option (1 , 2 , 3)";
+                                    break;
+                            }
+                        }
+                    }
+                    if (userChoice == 2)
+                    {
+                        gameOutput = "<<< Trading phase >>>\n\r";
+                        gameOutput += $"How much {userChoices[0]} do you want to give?\n\r";
+                        if (userInput != null)
+                        {
+                            userChoices[1] = userInput;
+                            userChoice = 3;
+                            userInput = null;
+                        }
+                    }
+                    if (userChoice == 3)
+                    {
+                        gameOutput = "<<< Trading phase >>>\n\r";
+                        gameOutput += "What resource do you want to receive?\n\r";
+                        gameOutput += "1. Materials \r2. Wheat \r3. Bread\r\n";
+                        if (userInput != null)
+                        {
+                            switch (userInput)
+                            {
+                                case "1":
+                                    userChoice = 4;
+                                    userChoices[2] = "Materials";
+                                    userInput = null;
+                                    break;
+                                case "2":
+                                    userChoice = 4;
+                                    userChoices[2] = "Wheat";
+                                    userInput = null;
+                                    break;
+                                case "3":
+                                    userChoice = 4;
+                                    userChoices[2] = "Bread";
+                                    userInput = null;
+                                    break;
+                                default:
+                                    gameOutput += "Pick a valid option (1 , 2 , 3)";
+                                    break;
+                            }
+                        }
+                    }
+                    if (userChoice == 4)
+                    {
+                        gameOutput = "<<< Trading phase >>>\n\r";
+                        tradeResult = Convert.ToInt32(AI.Trade(userChoices));
+                        gameOutput += $"The village accepted the {userChoices[1]} {userChoices[0]} and gave you {tradeResult} {userChoices[2]} in return.\n\r";
+                        gameOutput += "1. Go to next phase";
+                        switch (userChoices[0])
+                        {
+                            case "Materials":
+                                materials.Amount -= Convert.ToInt32(userChoices[1]);
+                                break;
+                            case "Wheat":
+                                wheat.Amount -= Convert.ToInt32(userChoices[1]);
+                                break;
+                            case "Bread":
+                                bread.Amount -= Convert.ToInt32(userChoices[1]);
+                                break;
+                        }
+                        switch (userChoices[2])
+                        {
+                            case "Materials":
+                                materials.Amount += tradeResult;
+                                userChoice = 5;
+                                break;
+                            case "Wheat":
+                                wheat.Amount += tradeResult;
+                                userChoice = 5;
+                                break;
+                            case "Bread":
+                                bread.Amount += tradeResult;
+                                userChoice = 5;
+                                break;
+                        }
+                    }
+                    if (userChoice == 5)
+                    {
+                        gameOutput = "<<< Trading phase >>>\n\r";
+                        gameOutput += $"The village accepted the {userChoices[1]} {userChoices[0]} and gave you {tradeResult} {userChoices[2]} in return.\n\r";
+                        gameOutput += "1. Go to next phase";
+                        if (userInput != null)
+                        {
+                            nextPhase = GamePhase.Upgrading;
+                            userInput = null;
+                            RoundFinished = true;
+                            userChoice = 0;
+                            AddRecoursesAfterRound();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                gameOutput += "An error occurred during the trading phase. Please try again.";
+                Console.WriteLine(ex.Message);
             }
         }
         private void TransitionPhase()
         {
-            // Code for rebuilding phase.
-            if (currentPhase == GamePhase.Transition)
+            try
             {
-                if (game.Part != 3)
+                // Code for transition phase.
+                if (currentPhase == GamePhase.Transition)
                 {
-                    gameOutput = $"<<< PART {game.Part + 1} >>>\n\r";
-                    if (game.Part == 1)
+                    if (game.Part != 3)
                     {
-                        gameOutput += "New feature available : Upgrading\n\r";
-                        gameOutput += $"Upgrade cost per building : {house.MaterialsRequiredToUpgrade} materials.\n\r";
-                    }
-                    if (game.Part == 2)
-                    {
-                        gameOutput += "New feature available : Trading\n\r";
-                        gameOutput += $"Trade recourses with allied villages.\n\r";
-                    }
-                    gameOutput += "1. Go to next Part";
-                    if (userInput != null)
-                    {
-                        if (game.Part < 3)
-                            game.Part++;
-                        currentPhase = GamePhase.Building;
-                        userInput = null;
-                        isFirstRound = true;
+                        gameOutput = $"<<< PART {game.Part + 1} >>>\n\r";
+                        if (game.Part == 1)
+                        {
+                            gameOutput += "New feature available : Upgrading\n\r";
+                            gameOutput += $"Upgrade cost per building : {house.MaterialsRequiredToUpgrade} materials.\n\r";
+                        }
                         if (game.Part == 2)
                         {
-                            int[] indexes = { 0, 1, 2, 3, 4, 5, 9, 10, 14, 15, 19, 20, 21, 22, 23, 24 };
-                            foreach (int i in indexes)
-                            {
-                                city.CityLayout[i] = "E";
-                            }
-                            city.MaxHouses = 10;
-                            city.MaxFields = 10;
-                            city.MaxMines = 10;
-                            city.MaxDefenses = 5;
+                            gameOutput += "New feature available : Trading\n\r";
+                            gameOutput += $"Trade recourses with allied villages.\n\r";
                         }
-                    }
-                }
-                else
-                {
-                    gameOutput = $"<<< PART {game.Part} >>>\n\r";
-                    gameOutput += "You have completed all parts of Empire Expansion, you can choose to save and exit or keep playing to reach a goal of your choosing.\r\n\n";
-                    gameOutput += "What do you want your goal to be?\n\r";
-                    gameOutput += "1. Reach maximum citizens and happiness \r2. Survive 20 more rounds \r3. Just keep playing";
-                    if (userInput != null)
-                    {
-                        switch (userInput)
+                        gameOutput += "1. Go to next Part";
+                        if (userInput != null)
                         {
-                            case "1":
-                                gamemodeChoice = "maxCitizens";
-                                break;
-                            case "2":
-                                gamemodeChoice = "20Rounds";
-                                roundsToWin = 0;
-                                break;
-                            case "3":
-                                // No extra variable required.
-                                break;
-                            default:
-                                gameOutput += "Pick a valid option (1 , 2 , 3)";
-                                break;
-                        }
-                        Part3Finished = true;
-                        if (totalEmptyFields == 0)
-                            currentPhase = GamePhase.Crafting;
-                        else
+                            if (game.Part < 3)
+                                game.Part++;
                             currentPhase = GamePhase.Building;
-                        userInput = null;
-                        isFirstRound = true;
+                            userInput = null;
+                            isFirstRound = true;
+                            if (game.Part == 2)
+                            {
+                                int[] indexes = { 0, 1, 2, 3, 4, 5, 9, 10, 14, 15, 19, 20, 21, 22, 23, 24 };
+                                foreach (int i in indexes)
+                                {
+                                    city.CityLayout[i] = "E";
+                                }
+                                city.MaxHouses = 10;
+                                city.MaxFields = 10;
+                                city.MaxMines = 10;
+                                city.MaxDefenses = 5;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        gameOutput = $"<<< PART {game.Part} >>>\n\r";
+                        gameOutput += "You have completed all parts of Empire Expansion, you can choose to save and exit or keep playing to reach a goal of your choosing.\r\n\n";
+                        gameOutput += "What do you want your goal to be?\n\r";
+                        gameOutput += "1. Reach maximum citizens and happiness \r2. Survive 20 more rounds \r3. Just keep playing";
+                        if (userInput != null)
+                        {
+                            switch (userInput)
+                            {
+                                case "1":
+                                    gamemodeChoice = "maxCitizens";
+                                    break;
+                                case "2":
+                                    gamemodeChoice = "20Rounds";
+                                    roundsToWin = 0;
+                                    break;
+                                case "3":
+                                    // No extra variable required.
+                                    break;
+                                default:
+                                    gameOutput += "Pick a valid option (1 , 2 , 3)";
+                                    break;
+                            }
+                            Part3Finished = true;
+                            if (totalEmptyFields == 0)
+                                currentPhase = GamePhase.Crafting;
+                            else
+                                currentPhase = GamePhase.Building;
+                            userInput = null;
+                            isFirstRound = true;
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                gameOutput += "An error occurred. Please try again.";
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -1019,8 +1090,8 @@ namespace Game_project_OOP
             {
                 currentPhase = GamePhase.Wait;
                 gameOutput = "<<< Recource Update >>>\n\r";
-                gameOutput += $"New Materials : {mine.ProductionsPerRound * city.TotalMines}\r";
-                gameOutput += $"New Wheat : {field.ProductionsPerRound * city.TotalFields}\r";
+                gameOutput += $"New Materials : {(mine.ProductionsPerRound * city.TotalMines) + (mine.UpgradedProductionsPerRound * city.TotalUpgradedMines)}\r";
+                gameOutput += $"New Wheat : {(field.ProductionsPerRound * city.TotalFields) + (field.UpgradedProductionsPerRound * city.TotalUpgradedFields)}\r";
                 if (bread.Amount > 4)
                 {
                     gameOutput += $"Bread to be consumed: {(bread.Amount - (bread.Amount % 4))}\r";
@@ -1162,12 +1233,10 @@ namespace Game_project_OOP
                 progressBar.Foreground = color;
             }
         }
-
         private void UpdateGameText(string text)
         {
             txbxGameInput.Text = text;
         }
-
         private void DrawGameBoard()
         {
             for (int i = 0; i < 25; i++)
