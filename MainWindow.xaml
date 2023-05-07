@@ -5,41 +5,142 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Game_project_OOP"
         mc:Ignorable="d"
-        Title="HomeWindow" SizeToContent="WidthAndHeight"
-        FontFamily="Verdana" FontSize="18" ResizeMode="NoResize">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="350" />
-            <ColumnDefinition Width="700" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100" />
-            <RowDefinition Height="150" />
-            <RowDefinition Height="100" />
-            <RowDefinition Height="100" />
-            <RowDefinition Height="100" />
-        </Grid.RowDefinitions>
-        <Image Grid.ColumnSpan="2" Grid.RowSpan="5" Source="C:\Users\decle\source\repos\Game project OOP\DALL·E 2023-05-06 19.53.41 - Old looking painting of roman buildings on mountains, 4K.png" Stretch="UniformToFill" />
+        Title="HomeWindow" SizeToContent="Height" Width="1050"
+        FontFamily="Verdana" FontSize="18">
+    <Viewbox>
+        <Grid PreviewMouseDown="ContainerGrid_PreviewMouseDown">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="350" />
+                <ColumnDefinition Width="700" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100" />
+                <RowDefinition Height="150" />
+                <RowDefinition Height="100" />
+                <RowDefinition Height="100" />
+                <RowDefinition Height="100" />
+            </Grid.RowDefinitions>
+            <Image Grid.ColumnSpan="2" Grid.RowSpan="5" Source="C:\Users\decle\source\repos\Game project OOP\DALL·E 2023-05-06 19.53.41 - Old looking painting of roman buildings on mountains, 4K.png" Stretch="UniformToFill" />
 
-        <Label Grid.Row="1" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Center" Margin="10" FontSize="28" FontWeight="Bold">Empire Expansion</Label>
-        <Button x:Name="BtnNewGame" Grid.Row="2" Margin="10,20" FontSize="20" Background="#2a592f" BorderBrush="Black" Opacity="0.8">New Game</Button>
-        <Button x:Name="BtnLoadGame"  Grid.Row="3" Margin="10,20" FontSize="20" Background="#2a592f" BorderBrush="Black" Opacity="0.8">Load Game</Button>
-        <Button x:Name="BtnQuit" Grid.Row="4" Margin="10,20" FontSize="20" Background="#2a592f" BorderBrush="Black" Opacity="0.8" >Quit</Button>
-        <Border BorderBrush="Black" BorderThickness="1" Margin="10,20" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" x:Name="GridNewName" Visibility="Hidden" Opacity="0.8">
-            <Grid Background="#2a592f">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"></ColumnDefinition>
-                    <ColumnDefinition Width="470"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Label VerticalContentAlignment="Center">Name of new game :</Label>
-                <TextBox x:Name="txbxGameName" Height="50" Background="Transparent" BorderBrush="Black" Padding="5,0" VerticalContentAlignment="Center" Grid.Column="1" ></TextBox>
-                <Label x:Name="lblErrorMessage" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right">Press enter to start game</Label>
-            </Grid>
-        </Border>
-        <ListBox x:Name="lstbxLoadedGames" Grid.Row="2" Grid.Column="1" Grid.RowSpan="3" Margin="10,20" Padding="10" Background="#2a592f" Opacity="0.8" Visibility="Hidden" BorderBrush="Black"></ListBox>
-    </Grid>
+            <Label Grid.Row="1" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Center" Margin="10" FontSize="28" FontWeight="Bold">Empire Expansion</Label>
+            <Button x:Name="BtnNewGame" Grid.Row="2" Margin="10,20" FontSize="20" Background="#2a592f" BorderBrush="Black" Opacity="0.8">New Game</Button>
+            <Button x:Name="BtnLoadGame"  Grid.Row="3" Margin="10,20" FontSize="20" Background="#2a592f" BorderBrush="Black" Opacity="0.8">Load Game</Button>
+            <Button x:Name="BtnQuit" Grid.Row="4" Margin="10,20" FontSize="20" Background="#2a592f" BorderBrush="Black" Opacity="0.8">Quit</Button>
+            <Button x:Name="OpenRulesPopup" Grid.Column="1" Margin="500,10,10,30" FontSize="20" Background="#2a592f" BorderBrush="Black" Opacity="0.8">Rules</Button>
+            <Popup x:Name="RulesPopup" Placement="Center" IsOpen="False" Grid.Column="1" Grid.Row="0">
+                <Border Background="#4b7a4d" BorderBrush="Black" BorderThickness="1" Width="800" Height="500">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,20">
+                            <TextBlock Text="Game Rules" FontSize="20" FontWeight="Bold" Margin="0, 0, 0, 10" />
+
+                            <TextBlock Text="&lt;&lt;&lt; INFO >>>" FontWeight="Bold" Margin="0, 10, 0, 5" />
+                            <TextBlock Text="Total building spaces: 25" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="-> Start with 1 Capital, 2 Fields, 2 Mines" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="Productions:" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="> Field: 10" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="> Mine: 20" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="> Defense: 20 (increases defense)" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="> House: 10 (increases maximum citizens)" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="More defense means less damage in the defending phase." Margin="0, 0, 0, 5" />
+                            <TextBlock Text="Health only decreases and doesn't regenerate." Margin="0, 0, 0, 5" />
+                            <TextBlock Text="Buildings are permanent, so choose wisely." Margin="0, 0, 0, 5" />
+                            <TextBlock Text="You lose when:" FontWeight="Bold" Margin="0, 10, 0, 5" />
+                            <TextBlock Text="Citizens = 0" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="Health = 0" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="You win when you reach your chosen goal." Margin="0, 0, 0, 10" />
+
+                            <TextBlock Text="&lt;&lt;&lt; GAMELOOP >>>" FontWeight="Bold" Margin="0, 10, 0, 5" />
+                            <TextBlock Text="Part 1:" FontWeight="Bold" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="3 phases: Building, Crafting, Defending" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="&lt;> Building &lt;>" FontWeight="Bold" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="- 4 available spots, can build 4 buildings." Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- Options: Field, Mine, House." Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- Max fields: 4, max mines: 4, max houses: 4." Margin="0, 0, 0, 5" />
+
+                            <TextBlock Text="&lt;> Crafting &lt;>" FontWeight="Bold" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="- 3 wheat = 1 bread" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- Option: 0 - max bread (max = wheat/3)" Margin="0, 0, 0, 5" />
+
+                            <TextBlock Text="&lt;> Defending &lt;>" FontWeight="Bold" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="- Small/Medium/Large village attacks you." Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- Damage to stats according to size of enemy." Margin="0, 0, 0, 10" />
+
+                            <TextBlock Text="Part 2:" FontWeight="Bold" Margin="0, 10, 0, 5" />
+                            <TextBlock Text="4 phases: Building, Crafting, Upgrading, Defending" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="&lt;> Building &lt;>" FontWeight="Bold" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="- 21 available spots, max 7 buildings can be built." Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- Options: Field, Mine, House, Defense." Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- Max fields: 10, max mines: 10, max houses: 10, max defenses: 5." Margin="0, 0, 0, 5" />
+
+                            <TextBlock Text="&lt;> Crafting &lt;>" FontWeight="Bold" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="- Same as part 1." Margin="0, 0, 0, 5" />
+
+                            <TextBlock Text="&lt;> Upgrading &lt;>" FontWeight="Bold" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="- Option: Upgrade [x] buildings." Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- x = choice (max = total buildings that can be upgraded)" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- Upgradable buildings: Field, Mine, Defense." Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- Field + 10" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- Mine + 10" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- Defense + 5" Margin="0, 0, 0, 5" />
+
+                            <TextBlock Text="&lt;> Defending &lt;>" FontWeight="Bold" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="- Same as part 1" Margin="0, 0, 0, 10" />
+
+                            <TextBlock Text="Part 3:" FontWeight="Bold" Margin="0, 10, 0, 5" />
+                            <TextBlock Text="5 phases: Building, Crafting, Trading, Upgrading, Defending" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="&lt;> Building &lt;>" FontWeight="Bold" Margin="0, 5, 0, 5" />
+
+                            <TextBlock Text="- Same as part 1" Margin="0, 0, 0, 5" />
+
+                            <TextBlock Text="&lt;> Crafting &lt;>" FontWeight="Bold" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="- Same as part 1" Margin="0, 0, 0, 5" />
+
+                            <TextBlock Text="&lt;> Trading &lt;>" FontWeight="Bold" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="- Options:" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="> What do you want to trade with?" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="> How much would you like to give?" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="> What would you like to receive?" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- Friendly village decides how much they will give you for your resources." Margin="0, 0, 0, 10" />
+
+                            <TextBlock Text="&lt;> Upgrading &lt;>" FontWeight="Bold" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="- Same as part 2" Margin="0, 0, 0, 5" />
+
+                            <TextBlock Text="&lt;> Defending &lt;>" FontWeight="Bold" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="- Same as part 1" Margin="0, 0, 0, 10" />
+
+                            <TextBlock Text="&lt;> After phases &lt;>" FontWeight="Bold" Margin="0, 10, 0, 5" />
+                            <TextBlock Text="- Earned wheat/materials given" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="- Option: Give bread to citizens to get more citizens (increases happiness as well)" Margin="0, 0, 0, 10" />
+
+                            <TextBlock Text="Part ∞ :" FontWeight="Bold" Margin="0, 10, 0, 5" />
+                            <TextBlock Text="- You can choose between 3 goals:" Margin="0, 5, 0, 5" />
+                            <TextBlock Text="> Try to survive 20 more rounds" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="> Reach maximum citizens" Margin="0, 0, 0, 5" />
+                            <TextBlock Text="> Keep playing without a set goal" Margin="0, 0, 0, 10" />
+
+                            <!-- Add more rules as needed -->
+                            <Button x:Name="CloseRulesPopup" Content="Close" Padding="10" Background="#2a592f" BorderBrush="Black" Opacity="0.8"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </Popup>
+        
+            <Border BorderBrush="Black" BorderThickness="1" Margin="10,20" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" x:Name="GridNewName" Visibility="Hidden" Opacity="0.8">
+                <Grid Background="#2a592f">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"></ColumnDefinition>
+                        <ColumnDefinition Width="470"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label VerticalContentAlignment="Center">Name of new game :</Label>
+                    <TextBox x:Name="txbxGameName" Height="50" Background="Transparent" BorderBrush="Black" Padding="5,0" VerticalContentAlignment="Center" Grid.Column="1" ></TextBox>
+                    <Label x:Name="lblErrorMessage" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right">Press enter to start game</Label>
+                </Grid>
+            </Border>
+            <ListBox x:Name="lstbxLoadedGames" Grid.Row="2" Grid.Column="1" Grid.RowSpan="3" Margin="10,20" Padding="10" Background="#2a592f" Opacity="0.8" Visibility="Hidden" BorderBrush="Black"></ListBox>
+        </Grid>
+    </Viewbox>
 </Window>

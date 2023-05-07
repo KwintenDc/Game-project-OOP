@@ -35,10 +35,11 @@ namespace Game_project_OOP
             BtnNewGame.Click += BtnNewGame_Click;
             BtnLoadGame.Click += BtnLoadGame_Click;
             BtnQuit.Click += BtnQuit_Click;
+            CloseRulesPopup.Click += CloseRulesPopup_Click;
+            OpenRulesPopup.Click += OpenRulesPopup_Click;
             txbxGameName.KeyDown += TxbxGameName_KeyDown;
             lstbxLoadedGames.SelectionChanged += LstbxLoadedGames_SelectionChanged;
         }
-
         private void LstbxLoadedGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstbxLoadedGames.SelectedItem != null)
@@ -93,6 +94,19 @@ namespace Game_project_OOP
                         {
                             lblErrorMessage.Content = "This name already exists";
                         }
+                    }
+                    else
+                    {
+                        gameWindow = new GameWindow(gameName);
+
+                        gameWindow.Closed += GameWindow_Closed;
+
+                        gameWindow.Show();
+
+                        GridNewName.Visibility = Visibility.Hidden;
+                        gameWindowShown = true;
+                        lblErrorMessage.Content = "Press enter to start game";
+                        Hide();
                     }
                 }
             }
@@ -162,10 +176,28 @@ namespace Game_project_OOP
                 // Do nothing, this exception does not need to handled.
             }
         }
-
         private void HomeWindow_Loaded(object sender, RoutedEventArgs e)
         {
             gameWindow.Owner = this;
         }
+        private void CloseRulesPopup_Click(object sender, RoutedEventArgs e)
+        {
+            RulesPopup.IsOpen = false;
+        }
+
+        private void OpenRulesPopup_Click(object sender, RoutedEventArgs e)
+        {
+            RulesPopup.IsOpen = true;
+        }
+
+        private void ContainerGrid_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (RulesPopup.IsOpen)
+            {
+                // Close the pop-up.
+                RulesPopup.IsOpen = false;
+            }
+        }
+
     }
 }
