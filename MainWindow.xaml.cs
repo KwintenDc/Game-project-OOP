@@ -45,6 +45,7 @@ namespace Game_project_OOP
             if (lstbxLoadedGames.SelectedItem != null)
             {
                 gameName = (string)lstbxLoadedGames.SelectedItem;
+                gameName = gameName.Replace("o ", "");
                 gameWindow = new GameWindow(gameName);
             }
             gameWindow.Closed += GameWindow_Closed;

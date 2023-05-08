@@ -20,6 +20,7 @@ namespace Game_project_OOP
         Path clickedPath;
         int clickedPathNumber;
         GamePhase currentPhase, nextPhase;
+        string currentPhaseString, nextPhaseString;
         bool isFirstRound = true, newGame = true;
         bool RoundFinished, Part3Finished, UpgradeStarted;
         Game game = new Game();
@@ -133,6 +134,12 @@ namespace Game_project_OOP
                     { "GameTotalRound", Convert.ToString(game.TotalRounds)},
                     { "CurrentPhase", Convert.ToString(currentPhase)},
                     { "NextPhase", Convert.ToString(nextPhase)},
+                    { "Part3Finished", Convert.ToString(Part3Finished)},
+                    { "UserInput", Convert.ToString(userInput)},
+                    { "GamemodeChoice", Convert.ToString(gamemodeChoice)},
+                    { "RoundFinished", Convert.ToString(RoundFinished)},
+                    { "TotalEmptyFields", Convert.ToString(totalEmptyFields)},
+                    { "RoundsToWin", Convert.ToString(roundsToWin)},
                 };
             string updatedJson;
             // Add or update the game data in the existing data dictionary
@@ -307,14 +314,101 @@ namespace Game_project_OOP
 
                     if (data.TryGetValue("CurrentPhase", out var currentPhaseValue))
                     {
-                        Enum.TryParse<GamePhase>(currentPhaseValue, out var currentPhase);
+                        switch(currentPhaseValue) 
+                        {
+                            case "Building":
+                                currentPhase = GamePhase.Building;
+                                break;
+                            case "Crafting":
+                                currentPhase = GamePhase.Crafting;
+                                break;
+                            case "Defending":
+                                currentPhase = GamePhase.Defending;
+                                break;
+                            case "Trading":
+                                currentPhase = GamePhase.Trading;
+                                break;
+                            case "Upgrading":
+                                currentPhase = GamePhase.Upgrading;
+                                break;
+                            case "Transition":
+                                currentPhase = GamePhase.Transition;
+                                break;
+                            case "Wait":
+                                currentPhase = GamePhase.Wait;
+                                break;
+                            case "GameWin":
+                                currentPhase = GamePhase.GameWin;
+                                break;
+                            case "GameOver":
+                                currentPhase = GamePhase.GameOver;
+                                break;
+                        }
                     }
 
                     if (data.TryGetValue("NextPhase", out var nextPhaseValue))
                     {
-                        Enum.TryParse<GamePhase>(nextPhaseValue, out var nextPhase);
+                        switch (nextPhaseValue) 
+                        {
+                            case "Building":
+                                currentPhase = GamePhase.Building;
+                                break;
+                            case "Crafting":
+                                currentPhase = GamePhase.Crafting;
+                                break;
+                            case "Defending":
+                                currentPhase = GamePhase.Defending;
+                                break;
+                            case "Trading":
+                                currentPhase = GamePhase.Trading;
+                                break;
+                            case "Upgrading":
+                                currentPhase = GamePhase.Upgrading;
+                                break;
+                            case "Transition":
+                                currentPhase = GamePhase.Transition;
+                                break;
+                            case "Wait":
+                                currentPhase = GamePhase.Wait;
+                                break;
+                            case "GameWin":
+                                currentPhase = GamePhase.GameWin;
+                                break;
+                            case "GameOver":
+                                currentPhase = GamePhase.GameOver;
+                                break;
+                        }
                     }
 
+                    if (data.TryGetValue("Part3Finished", out var Part3FinishedValue))
+                    {
+                        Part3Finished = Convert.ToBoolean(Part3FinishedValue);
+                    }
+
+                    if (data.TryGetValue("UserInput", out var UserInputValue))
+                    {
+                        userInput = UserInputValue;
+                    }
+
+                    if (data.TryGetValue("GamemodeChoice", out var GamemodeChoiceValue))
+                    {
+                        gamemodeChoice = GamemodeChoiceValue;
+                    }
+
+                    if (data.TryGetValue("RoundFinished", out var RoundFinishedValue))
+                    {
+                        RoundFinished = Convert.ToBoolean(RoundFinishedValue);
+                    }
+
+                    if (data.TryGetValue("TotalEmptyFields", out var TotalEmptyFieldsValue))
+                    {
+                        totalEmptyFields = Convert.ToInt32(TotalEmptyFieldsValue);
+                    }
+
+                    if (data.TryGetValue("RoundsToWin", out var RoundsToWinValue))
+                    {
+                        roundsToWin = Convert.ToInt32(RoundsToWinValue);
+                    }
                     // Update the progressbars.
                     UpdateUI();
 
@@ -327,20 +421,6 @@ namespace Game_project_OOP
         {
             if ((currentPhase != GamePhase.GameOver) && (currentPhase != GamePhase.GameWin))
             {
-                if (gamemodeChoice == "maxCitizens")
-                {
-                    if ((city.Citizens == MAX_CITIZENS_START + (house.HousingSpace * city.TotalHouses)) && (city.Happiness == MAX_HAPPINESS))
-                    {
-                        currentPhase = GamePhase.GameWin;
-                    }
-                }
-                if (gamemodeChoice == "20Rounds")
-                {
-                    if (roundsToWin == 20)
-                    {
-                        currentPhase = GamePhase.GameWin;
-                    }
-                }
                 switch (game.Part)
                 {
                     case 1:
@@ -348,6 +428,8 @@ namespace Game_project_OOP
                         CraftingPhase();
                         DefendingPhase();
                         TransitionPhase();
+
+                        CheckIfWon();
                         CheckIfLost();
                         break;
                     case 2:
@@ -356,6 +438,8 @@ namespace Game_project_OOP
                         UpgradingPhase();
                         DefendingPhase();
                         TransitionPhase();
+
+                        CheckIfWon();
                         CheckIfLost();
                         break;
                     case 3:
@@ -367,27 +451,47 @@ namespace Game_project_OOP
                         DefendingPhase();
                         if (!Part3Finished)
                             TransitionPhase();
+                        CheckIfWon();
                         CheckIfLost();
                         break;
                     default:
                         currentPhase = GamePhase.GameOver;
                         break;
                 }
-                if (currentPhase == GamePhase.Wait)
+                if (currentPhase == GamePhase.Wait && (currentPhase != GamePhase.GameWin) && (currentPhase != GamePhase.GameOver))
                     AddRecoursesAfterRound();
                 UpdateGameText(gameOutput);
                 DrawGameBoard();
                 UpdateUI();
             }
-            else if (currentPhase == GamePhase.GameWin)
-            {
-                // TODO
-            }
-            else
+            else if((currentPhase == GamePhase.GameOver) || (currentPhase == GamePhase.GameWin)) 
             {
                 if(userInput != null)
                 {
                     Close();
+                }
+            }
+        }
+        private void CheckIfWon()
+        {
+            if (gamemodeChoice == "maxCitizens")
+            {
+                if (city.Citizens == MAX_CITIZENS_START + (house.HousingSpace * city.TotalHouses))
+                {
+                    gameOutput = "<<< You've won! >>>\n\r";
+                    gameOutput += "You have succesfully filled all your housing space with happy citizens\r\n\n";
+                    gameOutput += "1. Go to home page.";
+                    currentPhase = GamePhase.GameWin;
+                }
+            }
+            if (gamemodeChoice == "20Rounds")
+            {
+                if (roundsToWin == 20)
+                {
+                    gameOutput = "<<< You've won! >>>\n\r";
+                    gameOutput += "You have succesfully survived 20 extra rounds.";
+                    gameOutput += "1. Go to home page.";
+                    currentPhase = GamePhase.GameWin;
                 }
             }
         }
@@ -570,7 +674,7 @@ namespace Game_project_OOP
                             }
                         }
                     }
-                    if ((game.Round > game.TotalRounds - 1) || (materials.Amount < 20))
+                    if ((game.Round > game.TotalRounds - 1) || (materials.Amount < 20) || totalEmptyFields == 0)
                     {
                         isFirstRound = true;
                         nextPhase = GamePhase.Crafting;
@@ -819,7 +923,7 @@ namespace Game_project_OOP
                     {
                         currentPhase = GamePhase.Transition;
                         userInput = null;
-                        if (Part3Finished)
+                        if ((Part3Finished) && (gamemodeChoice == "20Rounds"))
                             roundsToWin++;
                         if (Part3Finished && (totalEmptyFields <= 0))
                         {
