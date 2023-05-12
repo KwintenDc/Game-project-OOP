@@ -130,19 +130,16 @@ namespace Game_project_OOP
 
                 if (data != null)
                 {
-                    //if (lstbxLoadedGames.Items.Count == 0)
-                    //{
-                        // Retrieve all the keys (headers)
-                        IEnumerable<string> headers = data.Keys;
+                    // Retrieve all the keys (headers)
+                    IEnumerable<string> headers = data.Keys;
 
-                        lstbxLoadedGames.Items.Clear();
+                    lstbxLoadedGames.Items.Clear();
 
-                        // Iterate over the headers and print them
-                        foreach (string header in headers)
-                        {
-                            lstbxLoadedGames.Items.Add($"o {header}");
-                        }
-                    //}
+                    // Iterate over the headers and print them
+                    foreach (string header in headers)
+                    {
+                        lstbxLoadedGames.Items.Add($"o {header}");
+                    }
                 }
                 else if(!lstbxLoadedGames.Items.Contains("No previous games found."))
                 {

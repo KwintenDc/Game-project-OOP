@@ -20,7 +20,6 @@ namespace Game_project_OOP
         Path clickedPath;
         int clickedPathNumber;
         GamePhase currentPhase, nextPhase;
-        string currentPhaseString, nextPhaseString;
         bool isFirstRound = true, newGame = true;
         bool RoundFinished, Part3Finished, UpgradeStarted;
         Game game = new Game();
@@ -159,6 +158,7 @@ namespace Game_project_OOP
 
             // Write the JSON string to the file
             File.WriteAllText(fileName, updatedJson);
+
 
             Close();
         }
